@@ -7,49 +7,85 @@
 //
 
 #import "Tracks_TVC.h"
+#import "Track_TVCell.h"
+#import "JGSpotify.h"
+
+#import <ChameleonFramework/Chameleon.h>
 
 @interface Tracks_TVC ()
+
+@property (nonatomic, strong) NSMutableArray *tracks;
 
 @end
 
 @implementation Tracks_TVC
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+- (NSMutableArray *)tracks
+{
+    if (!_tracks) _tracks = [[NSMutableArray alloc] init];
+    return _tracks;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error) {
+        for (NSDictionary *trackInfo in tracks[@"items"]) {
+            NSLog(@"%@", trackInfo);
+            [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"]]];
+        }
+        [self.tableView reloadData];
+    }];
+    
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.separatorColor = [UIColor colorWithHexString:@"CDCDCD"];
+    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
+    
+    self.tableView.estimatedRowHeight = 100.0f;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.title = @"Songs".uppercaseString;
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Incomplete implementation, return the number of sections
-    return 0;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete implementation, return the number of rows
-    return 0;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.tracks.count;
 }
 
-/*
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Track_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"trackCell" forIndexPath:indexPath];
     
-    // Configure the cell...
+    cell.song.text = [self.tracks objectAtIndex:indexPath.row][0];
+    cell.artist.text = [self.tracks objectAtIndex:indexPath.row][2];
+    cell.artist.text = cell.artist.text.uppercaseString;
+    
+    cell.song.textColor = [UIColor colorWithHexString:@"414141"];
+    cell.artist.textColor = [UIColor colorWithHexString:@"414141"];
+    cell.backgroundColor = [UIColor clearColor];
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [UIColor colorWithHexString:@"EDEDED"];
+    cell.selectedBackgroundView = cellBackgroundView;
     
     return cell;
 }
-*/
+
+//- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    return 100.0f;
+//}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
 
 /*
 // Override to support conditional editing of the table view.

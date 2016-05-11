@@ -8,6 +8,10 @@
 
 #import "AppDelegate.h"
 
+#import "JGSpotify.h"
+
+#import <ChameleonFramework/Chameleon.h>
+
 @interface AppDelegate ()
 
 @end
@@ -15,8 +19,35 @@
 @implementation AppDelegate
 
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+//    [spotify.scopes addObject:@"playlist-modify-public"];
+//    [spotify.scopes addObject:@"playlist-modify-private"];
+//    [spotify.scopes addObject:@"playlist-read-collaborative"];
+//    [spotify.scopes addObject:@"playlist-read-private"];
+//    [spotify.scopes addObject:@"user-library-modify"];
+//    [spotify.scopes addObject:@"user-library-read"];
+//    [spotify.scopes addObject:@"user-top-read"];
+    
+    [[UINavigationBar appearance] setTranslucent:NO];
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"080808"]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
+//    [[UINavigationBar appearance] setShadowImage:[UIImage new]];
+//    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
+                                                           NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:14.0f]}];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"suggestion://oauth"]];
+    
+    NSMutableArray *scopes = [[NSMutableArray alloc] init];
+    [scopes addObject:@"user-top-read"];
+    
+    [JGSpotify initWithClientID:@"d8d8cd82ff804b749bbf7924c63c9f9c"
+                   ClientSecret:@"2d43f9cc78db4b9fb34f0457a09999fd"
+                         Scopes:scopes
+                    CallbackUri: @"suggestion://oauth"
+                 AndRedirectUri:@"suggestion://oauth"];
+    
     return YES;
 }
 
@@ -42,6 +73,11 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return YES;
 }
 
 #pragma mark - Core Data stack

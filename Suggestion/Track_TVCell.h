@@ -10,4 +10,7 @@
 
 @interface Track_TVCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *song;
+@property (weak, nonatomic) IBOutlet UILabel *artist;
+
 @end

@@ -7,6 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "JGSpotify.h"
+
+#import "TopTypes_VC.h"
 
 @interface ViewController ()
 
@@ -14,14 +17,49 @@
 
 @implementation ViewController
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidAppear:(BOOL)animated
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
+    NSString *refreshToken = [userDefaults objectForKey:@"spotifyRefreshToken"];
+    
+    if (accessToken != nil) {
+        NSDate *now = [NSDate date];
+        NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
+        if (distanceBetweenDates < 60) {
+            NSLog(@"refresh token");
+        } else {
+            NSLog(@"%@", accessToken);
+            JGSpotify *spotify = [JGSpotify sharedInstance];
+            spotify.accessToken = accessToken;
+            spotify.accessTokenExpires = accessTokenExpires;
+            spotify.refreshToken = refreshToken;
+            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TracksNavController"];
+            [self presentViewController:initialNavController animated:YES completion:nil];
+        }
+    } else {
+        NSLog(@"show login");
+    }
 }
+
+- (IBAction)login:(UIButton *)sender
+{
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    [spotify authorizeWithCompletionHandler:^(BOOL result, NSError *error) {
+        if (!error) {
+            
+        } else {
+            NSLog(@"%@", error);
+        }
+    }];
+}
+
 
 @end
