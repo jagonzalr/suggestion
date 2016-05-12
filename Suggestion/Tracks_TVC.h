@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @interface Tracks_TVC : UITableViewController
+
+@property (nonatomic) BOOL isLoadingRecommendations;
+@property (nonatomic, strong) NSArray *recommendationsParameters;
 
 @end

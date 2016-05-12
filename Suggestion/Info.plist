@@ -38,5 +38,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>spotify</string>
+	</array>
 </dict>
 </plist>

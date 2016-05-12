@@ -31,6 +31,7 @@
 
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler;
 + (void)getTopTracksCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
++ (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(NSDictionary *recommendations, NSError *error))completionHandler;
 
 - (void)authorizeWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
 

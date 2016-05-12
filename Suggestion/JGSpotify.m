@@ -185,9 +185,16 @@
      }];
 }
 
-+ (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
++ (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(NSDictionary *recommendations, NSError *error))completionHandler
 {
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSString *recommendations = [NSString stringWithFormat:@"https://api.spotify.com/v1/recommendations?seed_artists=%@&seed_tracks=%@&min_popularity=%@",
+                                 seedArtist, seedTrack, popularity];
     
+    NSURL *url = [NSURL URLWithString:recommendations];
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        completionHandler(responseObject, error);
+    }];
 }
 
 @end

@@ -9,8 +9,6 @@
 #import "ViewController.h"
 #import "JGSpotify.h"
 
-#import "TopTypes_VC.h"
-
 @interface ViewController ()
 
 @end

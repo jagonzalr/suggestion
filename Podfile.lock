@@ -2,11 +2,14 @@ PODS:
   - ChameleonFramework (2.1.0):
     - ChameleonFramework/Default (= 2.1.0)
   - ChameleonFramework/Default (2.1.0)
+  - SCLAlertView-Objective-C (1.0.3)
 
 DEPENDENCIES:
   - ChameleonFramework
+  - SCLAlertView-Objective-C (~> 1.0)
 
 SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  SCLAlertView-Objective-C: e83376218b431109dc5403adc63f8e9787db7b74
 
 COCOAPODS: 0.39.0

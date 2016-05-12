@@ -5,5 +5,6 @@ platform :ios, '8.0'
 target 'Suggestion' do
 
   pod 'ChameleonFramework'
+  pod 'SCLAlertView-Objective-C', '~> 1.0'
 
 end

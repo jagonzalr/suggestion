@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4FA2A12B11C4E87C93E6CA48 /* libPods-Suggestion.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBD3291415497D4B4732306 /* libPods-Suggestion.a */; };
 		BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD1426731CE3A279001007A0 /* Track_TVCell.m */; };
+		BD14267A1CE3B815001007A0 /* Recommendations_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD1426791CE3B815001007A0 /* Recommendations_TVC.m */; };
 		BD4BDD211CD7F07B00C94FAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD201CD7F07B00C94FAF /* main.m */; };
 		BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD231CD7F07B00C94FAF /* AppDelegate.m */; };
 		BD4BDD271CD7F07B00C94FAF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD261CD7F07B00C94FAF /* ViewController.m */; };
@@ -28,6 +29,8 @@
 		8EBD3291415497D4B4732306 /* libPods-Suggestion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Suggestion.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1426721CE3A279001007A0 /* Track_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track_TVCell.h; sourceTree = "<group>"; };
 		BD1426731CE3A279001007A0 /* Track_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track_TVCell.m; sourceTree = "<group>"; };
+		BD1426781CE3B815001007A0 /* Recommendations_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Recommendations_TVC.h; sourceTree = "<group>"; };
+		BD1426791CE3B815001007A0 /* Recommendations_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Recommendations_TVC.m; sourceTree = "<group>"; };
 		BD4BDD1C1CD7F07B00C94FAF /* Suggestion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Suggestion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD4BDD201CD7F07B00C94FAF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BD4BDD221CD7F07B00C94FAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -81,6 +84,15 @@
 			name = Tracks;
 			sourceTree = "<group>";
 		};
+		BD1426771CE3B7DA001007A0 /* Recommendations */ = {
+			isa = PBXGroup;
+			children = (
+				BD1426781CE3B815001007A0 /* Recommendations_TVC.h */,
+				BD1426791CE3B815001007A0 /* Recommendations_TVC.m */,
+			);
+			name = Recommendations;
+			sourceTree = "<group>";
+		};
 		BD4BDD131CD7F07B00C94FAF = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +126,7 @@
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */,
 				BD1426761CE3A285001007A0 /* Tracks */,
+				BD1426771CE3B7DA001007A0 /* Recommendations */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,
 			);
 			path = Suggestion;
@@ -173,6 +186,7 @@
 				TargetAttributes = {
 					BD4BDD1B1CD7F07B00C94FAF = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = A5FA6J6LJY;
 					};
 				};
 			};
@@ -266,6 +280,7 @@
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
 				BD4BDD2D1CD7F07B00C94FAF /* Suggestion.xcdatamodeld in Sources */,
 				BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */,
+				BD14267A1CE3B815001007A0 /* Recommendations_TVC.m in Sources */,
 				BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */,
 				BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */,
 				BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */,
@@ -381,10 +396,12 @@
 			baseConfigurationReference = 780DE16A37AEA60E75109A23 /* Pods-Suggestion.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Suggestion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jagonzalr.Suggestion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -393,10 +410,12 @@
 			baseConfigurationReference = 3AD8A8617104B3B0F569FA4E /* Pods-Suggestion.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = Suggestion/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jagonzalr.Suggestion;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
