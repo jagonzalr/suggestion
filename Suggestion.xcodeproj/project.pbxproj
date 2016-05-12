@@ -102,18 +102,13 @@
 		BD4BDD1E1CD7F07B00C94FAF /* Suggestion */ = {
 			isa = PBXGroup;
 			children = (
-				BD4BDD391CD7F1A600C94FAF /* JGSpotify.h */,
-				BD4BDD3A1CD7F1A600C94FAF /* JGSpotify.m */,
-				BD4BDD3C1CD804D100C94FAF /* JGSpotifyVerbs.h */,
-				BD4BDD3D1CD804D100C94FAF /* JGSpotifyVerbs.m */,
-				BD4BDD3F1CD80A1200C94FAF /* JGSpotifyAuthorize_VC.h */,
-				BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */,
+				BDB6A3391CE433DD00C5B1C5 /* JGSpotify */,
+				BD1426761CE3A285001007A0 /* Tracks */,
 				BD4BDD251CD7F07B00C94FAF /* ViewController.h */,
 				BD4BDD261CD7F07B00C94FAF /* ViewController.m */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */,
-				BD1426761CE3A285001007A0 /* Tracks */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,
 			);
 			path = Suggestion;
@@ -129,6 +124,19 @@
 				BD4BDD201CD7F07B00C94FAF /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		BDB6A3391CE433DD00C5B1C5 /* JGSpotify */ = {
+			isa = PBXGroup;
+			children = (
+				BD4BDD391CD7F1A600C94FAF /* JGSpotify.h */,
+				BD4BDD3A1CD7F1A600C94FAF /* JGSpotify.m */,
+				BD4BDD3C1CD804D100C94FAF /* JGSpotifyVerbs.h */,
+				BD4BDD3D1CD804D100C94FAF /* JGSpotifyVerbs.m */,
+				BD4BDD3F1CD80A1200C94FAF /* JGSpotifyAuthorize_VC.h */,
+				BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */,
+			);
+			name = JGSpotify;
 			sourceTree = "<group>";
 		};
 		D61128D483A5D07D0EB2CE46 /* Frameworks */ = {

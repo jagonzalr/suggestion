@@ -102,6 +102,53 @@
     
 }
 
++ (void)JGSpotifyPutVerb:(NSURL *)url
+                 Payload:(NSString *)payload
+       AuthorizationCode:(NSString *)authorizationCode
+       CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
+{
+    NSData *data = [payload dataUsingEncoding:NSASCIIStringEncoding
+                         allowLossyConversion:YES];
+    
+    NSString *dataLength = [NSString stringWithFormat:@"%lu", (unsigned long)[payload length]];
+    
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+    [urlRequest setURL:url];
+    [urlRequest setHTTPMethod:@"PUT"];
+    [urlRequest setValue:dataLength
+      forHTTPHeaderField:@"Content-Length"];
+    
+    [urlRequest setValue:@"application/x-www-form-urlencoded"
+      forHTTPHeaderField:@"Content-Type"];
+    
+    [urlRequest setValue:[NSString stringWithFormat:@"Bearer %@", authorizationCode]
+      forHTTPHeaderField:@"Authorization"];
+    
+    [urlRequest setHTTPBody:data];
+    
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
+    [configuration setAllowsCellularAccess:YES];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:urlRequest
+                                                completionHandler:^(NSData * _Nullable data,
+                                                                    NSURLResponse * _Nullable response,
+                                                                    NSError * _Nullable error)
+                                      {
+                                          if (error) {
+                                              completionHandler(response, nil, error);
+                                          } else {
+                                              NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                   options:NSJSONReadingMutableContainers
+                                                                                                     error:&error];
+                                              
+                                              completionHandler(response, json, nil);
+                                          }
+                                      }];
+    
+    [dataTask resume];
+    
+}
+
 + (NSString *)credentialsToBase64WithClientID:(NSString *)clientID
                               AndClientSecret:(NSString *)clientSecret
 {

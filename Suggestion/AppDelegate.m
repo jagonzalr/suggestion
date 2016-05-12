@@ -23,13 +23,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    JGSpotify *spotify = [JGSpotify sharedInstance];
 //    [spotify.scopes addObject:@"playlist-modify-public"];
 //    [spotify.scopes addObject:@"playlist-modify-private"];
 //    [spotify.scopes addObject:@"playlist-read-collaborative"];
 //    [spotify.scopes addObject:@"playlist-read-private"];
-//    [spotify.scopes addObject:@"user-library-modify"];
-//    [spotify.scopes addObject:@"user-library-read"];
-//    [spotify.scopes addObject:@"user-top-read"];
+    [spotify.scopes addObject:@"user-library-modify"];
+    [spotify.scopes addObject:@"user-library-read"];
+    [spotify.scopes addObject:@"user-top-read"];
     
     [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];

@@ -282,6 +282,7 @@
 
 - (void)saveTrack:(UIButton *)sender
 {
+    [SVProgressHUD show];
     NSString *title = @"Do you want to save this track?";
     NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
@@ -289,13 +290,58 @@
     
     [alertView addButtonWithTitle:@"No"
                              type:SIAlertViewButtonTypeDestructive
-                          handler:^(SIAlertView *alertView) {
-                              NSLog(@"Cancel Clicked");
-                          }];
+                          handler:nil];
+    
     [alertView addButtonWithTitle:@"Yes"
                              type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              
+                              [JGSpotify saveTrack:[self.tracks objectAtIndex:sender.tag][3] WithCompletionHandler:^(id artist, NSError *error) {
+                                  [SVProgressHUD dismiss];
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      if (!error) {
+                                          NSDictionary *artistInfo = (NSDictionary *)artist;
+                                          if ([artistInfo objectForKey:@"error"]) {
+                                              NSLog(@"%@", artist);
+                                              NSString *successTitle = @"Error";
+                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+                                              
+                                              SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                                               andMessage:successMessage];
+                                              
+                                              [alertView addButtonWithTitle:@"Ok"
+                                                                       type:SIAlertViewButtonTypeDestructive
+                                                                    handler:nil];
+                                              [alertView show];
+                                          } else {
+                                              NSString *successTitle = @"Success";
+                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify", [self.tracks objectAtIndex:sender.tag][0]];
+                                              
+                                              SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                                               andMessage:successMessage];
+                                              
+                                              [alertView addButtonWithTitle:@"Ok"
+                                                                       type:SIAlertViewButtonTypeDefault
+                                                                    handler:nil];
+                                              [alertView show];
+                                          }
+                                          
+                                          
+                                      } else {
+                                          NSLog(@"%@", artist);
+                                          NSString *successTitle = @"Error";
+                                          NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+                                          
+                                          SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                                           andMessage:successMessage];
+                                          
+                                          [alertView addButtonWithTitle:@"Ok"
+                                                                   type:SIAlertViewButtonTypeDestructive
+                                                                handler:nil];
+                                          [alertView show];
+                                      }
+                                  });
+                                  
+                              }];
                           }];
     
     [alertView show];

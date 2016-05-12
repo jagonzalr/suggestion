@@ -147,6 +147,15 @@
     }];
 }
 
++ (void)saveTrack:(NSString *)trackID WithCompletionHandler:(void(^)(id track, NSError *error))completionHandler
+{
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/me/tracks?ids=%@", trackID]];
+    [JGSpotifyVerbs JGSpotifyPutVerb:url Payload:@"" AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        completionHandler(responseObject, error);
+    }];
+}
+
 - (void)getAccessToken:(NSURL *)tokenUrl
                Payload:(NSString *)payload
      CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler

@@ -21,4 +21,9 @@
              ClientSecret:(NSString *)clientSecret
         CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler;
 
++ (void)JGSpotifyPutVerb:(NSURL *)url
+                 Payload:(NSString *)payload
+       AuthorizationCode:(NSString *)authorizationCode
+       CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler;
+
 @end
