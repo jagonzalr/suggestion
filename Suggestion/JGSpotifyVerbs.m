@@ -25,8 +25,6 @@
     [urlRequest setValue:[NSString stringWithFormat:@"Bearer %@", authorizationCode]
       forHTTPHeaderField:@"Authorization"];
     
-    NSLog(@"%@", [urlRequest allHTTPHeaderFields]);
-    
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     [configuration setAllowsCellularAccess:YES];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];

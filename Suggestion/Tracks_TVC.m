@@ -8,20 +8,29 @@
 
 #import "Tracks_TVC.h"
 #import "Track_TVCell.h"
-#import "Recommendations_TVC.h"
 #import "JGSpotify.h"
 
 #import <ChameleonFramework/Chameleon.h>
+#import "SIAlertView.h"
+#import "SVProgressHUD.h"
 
 @interface Tracks_TVC ()
 
-@property (nonatomic, strong) NSMutableArray *tracks;
-@property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic) BOOL isPlaying;
+@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic, strong) AVAudioSession *session;
+@property (nonatomic, strong) NSMutableArray *tracks;
 
 @end
 
 @implementation Tracks_TVC
+
+#pragma mark - Getters && Setters
+
+- (AVAudioSession *)session
+{
+    return [AVAudioSession sharedInstance];
+}
 
 - (NSMutableArray *)tracks
 {
@@ -29,114 +38,196 @@
     return _tracks;
 }
 
+
+#pragma mark - Initial Configuration
+
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (self.isLoadingRecommendations) {
-        [JGSpotify getRecommendationsWithSeedArtist:self.recommendationsParameters[4] SeedTrack:self.recommendationsParameters[3] SeedGenre:@"" Popularity:@"50" AndCompletionHandler:^(NSDictionary *recommendations, NSError *error) {
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                for (NSDictionary *recommendationInfo in recommendations[@"tracks"]) {
-                    NSLog(@"%@", recommendationInfo[@"uri"]);
-                    [self.tableView beginUpdates];
-                    [self.tracks addObject:@[recommendationInfo[@"name"], recommendationInfo[@"preview_url"], recommendationInfo[@"artists"][0][@"name"], recommendationInfo[@"id"], recommendationInfo[@"artists"][0][@"id"], recommendationInfo[@"uri"], recommendationInfo[@"album"][@"name"]]];
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1 inSection:0];
-                    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                    [self.tableView endUpdates];
-                    
-                }
-            });
-            
-        }];
-    } else {
-        [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                for (NSDictionary *trackInfo in tracks[@"items"]) {
-                    [self.tableView beginUpdates];
-                    [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"], trackInfo[@"id"], trackInfo[@"artists"][0][@"id"], trackInfo[@"uri"], trackInfo[@"album"][@"name"]]];
-                    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1 inSection:0];
-                    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                    [self.tableView endUpdates];
-                    NSLog(@"%@", trackInfo);
-                }
-            });
-            
-        }];
-    }
     
-    
-    self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorColor = [UIColor colorWithHexString:@"CDCDCD"];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
-    
-    self.tableView.estimatedRowHeight = 150.0f;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
-    
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
-    if (self.isLoadingRecommendations) {
-        self.title = @"Recommendations".uppercaseString;
-    } else {
-        self.title = @"Top Songs".uppercaseString;
-    }
-    
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
+    [self configureAVSession];
+    [self customizeUI];
+    [self loadTracks];
+}
+
+
+#pragma mark - Functions
+
+- (void)configureAVSession
+{
     NSError *error;
-    [session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    if (error)
-    {
+    [self.session setCategory:AVAudioSessionCategoryPlayback error:&error];
+    if (error) {
         NSLog(@"Error setting up audio session category: %@", error.localizedDescription);
     }
-    
-    self.isPlaying = NO;
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void)configureCell:(Track_TVCell *)cell IndexPath:(NSIndexPath *)indexPath
 {
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.tracks.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    Track_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"trackCell" forIndexPath:indexPath];
-    
     cell.song.text = [self.tracks objectAtIndex:indexPath.row][0];
     cell.artist.text = [self.tracks objectAtIndex:indexPath.row][2];
     cell.artist.text = cell.artist.text.uppercaseString;
-    cell.album.text = [self.tracks objectAtIndex:indexPath.row][2];
+    cell.album.text = [self.tracks objectAtIndex:indexPath.row][6];
     cell.album.text = cell.album.text.uppercaseString;
     
     cell.song.textColor = [UIColor colorWithHexString:@"414141"];
     cell.artist.textColor = [UIColor colorWithHexString:@"414141"];
-    cell.backgroundColor = [UIColor clearColor];
+    cell.album.textColor = [UIColor colorWithHexString:@"414141"];
+    
     UIView *cellBackgroundView = [[UIView alloc] init];
     cellBackgroundView.backgroundColor = [UIColor colorWithHexString:@"EDEDED"];
-    cell.selectedBackgroundView = cellBackgroundView;
     
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
+    
+    cell.likeBtn.tag = indexPath.row;
     cell.mediaBtn.tag = indexPath.row;
     cell.openInSpotifyBtn.tag = indexPath.row;
-    [cell.mediaBtn addTarget:self action:@selector(playPreview:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.openInSpotifyBtn addTarget:self action:@selector(openInSpotify:) forControlEvents:UIControlEventTouchUpInside];
     
-    return cell;
+    [cell.likeBtn addTarget:self
+                     action:@selector(saveTrack:)
+           forControlEvents:UIControlEventTouchUpInside];
+    
+    [cell.mediaBtn addTarget:self
+                      action:@selector(playPreview:)
+            forControlEvents:UIControlEventTouchUpInside];
+    
+    [cell.openInSpotifyBtn addTarget:self
+                              action:@selector(openInSpotify:)
+                    forControlEvents:UIControlEventTouchUpInside];
 }
+
+- (void)configureTableView
+{
+    if (self.tracks.count > 0) {
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.backgroundView = nil;
+    } else {
+        self.tableView.backgroundView = [UIView new];
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+}
+
+- (void)customizeUI
+{
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.separatorColor = [UIColor colorWithHexString:@"CDCDCD"];
+    self.tableView.estimatedRowHeight = 150.0f;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
+    
+    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
+    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+    
+    if (self.isLoadingRecommendations) {
+        self.title = @"Recommendations".uppercaseString;
+    } else {
+        self.title = @"Songs".uppercaseString;
+    }
+}
+
+- (void)loadTop
+{
+    [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             for (NSDictionary *trackInfo in tracks[@"items"]) {
+                 [self.tableView beginUpdates];
+                 [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"], trackInfo[@"id"], trackInfo[@"artists"][0][@"id"], trackInfo[@"uri"], trackInfo[@"album"][@"name"]]];
+                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                             inSection:0];
+                 
+                 [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                       withRowAnimation:UITableViewRowAnimationAutomatic];
+                 
+                 [self.tableView endUpdates];
+             }
+         });
+         [SVProgressHUD dismiss];
+     }];
+}
+
+- (void)loadRecommendations
+{
+    [SVProgressHUD show];
+    [JGSpotify getRecommendationsWithSeedArtist:self.recommendationsParameters[4]
+                                      SeedTrack:self.recommendationsParameters[3]
+                                      SeedGenre:@""
+                                     Popularity:@"50"
+                           AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
+     {
+         dispatch_async(dispatch_get_main_queue(), ^{
+             for (NSDictionary *recommendationInfo in recommendations[@"tracks"]) {
+                 [self.tableView beginUpdates];
+                 [self.tracks addObject:@[recommendationInfo[@"name"], recommendationInfo[@"preview_url"], recommendationInfo[@"artists"][0][@"name"], recommendationInfo[@"id"], recommendationInfo[@"artists"][0][@"id"], recommendationInfo[@"uri"], recommendationInfo[@"album"][@"name"]]];
+                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                             inSection:0];
+                 
+                 [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                       withRowAnimation:UITableViewRowAnimationAutomatic];
+                 
+                 [self.tableView endUpdates];
+             }
+             [SVProgressHUD dismiss];
+         });
+     }];
+
+}
+
+- (void)loadTracks
+{
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if (self.isLoadingRecommendations) {
+            [self loadRecommendations];
+        } else {
+            [self loadTop];
+        }
+    });
+}
+
+
+#pragma mark - Selectors
 
 - (void)openInSpotify:(UIButton *)sender
 {
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]]) {
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
-    } else {
-        NSLog(@"open in safari");
-    }
+    NSString *title = @"Do you want to leave the app?";
+    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify", [self.tracks objectAtIndex:sender.tag][0]];
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
+                                                     andMessage:message];
     
+    [alertView addButtonWithTitle:@"No"
+                             type:SIAlertViewButtonTypeDestructive
+                          handler:^(SIAlertView *alertView) {
+                              NSLog(@"Cancel Clicked");
+                          }];
+    [alertView addButtonWithTitle:@"Yes"
+                             type:SIAlertViewButtonTypeDefault
+                          handler:^(SIAlertView *alertView) {
+                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
+                          }];
+    
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]]) {
+        [alertView show];
+    } else {
+        NSString *noSpotifyTitle = @"No Spotify";
+        NSString *noSpotifyMessage = @"Your iPhone doesn't have the Spotify app installed.";
+        
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:noSpotifyTitle
+                                                         andMessage:noSpotifyMessage];
+        
+        [alertView addButtonWithTitle:@"Ok"
+                                 type:SIAlertViewButtonTypeCancel
+                              handler:^(SIAlertView *alertView) {
+                                  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
+                              }];
+        [alertView show];
+
+    }
 }
 
 - (void)playPreview:(UIButton *)sender
@@ -144,9 +235,16 @@
     for (int i = 0; i < self.tracks.count; i++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-        [cell.mediaBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-        [cell.mediaBtn addTarget:self action:@selector(playPreview:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
+                       forState:UIControlStateNormal];
+        
+        [cell.mediaBtn removeTarget:nil
+                             action:NULL
+                   forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell.mediaBtn addTarget:self
+                          action:@selector(playPreview:)
+                forControlEvents:UIControlEventTouchUpInside];
     }
     
     if (self.isPlaying) {
@@ -155,17 +253,25 @@
     }
     
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag inSection:0];
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag
+                                                inSection:0];
+    
     Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    [cell.mediaBtn setImage:[UIImage imageNamed:@"Stop"] forState:UIControlStateNormal];
-    [cell.mediaBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-    [cell.mediaBtn addTarget:self action:@selector(stopPreview:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.mediaBtn setImage:[UIImage imageNamed:@"Stop"]
+                   forState:UIControlStateNormal];
+    
+    [cell.mediaBtn removeTarget:nil
+                         action:NULL
+               forControlEvents:UIControlEventTouchUpInside];
+    
+    [cell.mediaBtn addTarget:self
+                      action:@selector(stopPreview:)
+            forControlEvents:UIControlEventTouchUpInside];
     
     NSURL *url = [NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][1]];
     AVPlayerItem* playerItem = [AVPlayerItem playerItemWithURL:url];
     
-    // Subscribe to the AVPlayerItem's DidPlayToEndTime notification.
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:playerItem];
     
     self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
     self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
@@ -174,17 +280,25 @@
     NSLog(@"playing");
 }
 
--(void)itemDidFinishPlaying:(NSNotification *) notification {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
-    for (int i = 0; i < self.tracks.count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
-        [cell.mediaBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-        [cell.mediaBtn addTarget:self action:@selector(playPreview:) forControlEvents:UIControlEventTouchUpInside];
-    }
+- (void)saveTrack:(UIButton *)sender
+{
+    NSString *title = @"Do you want to save this track?";
+    NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+    SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
+                                                     andMessage:message];
     
-    self.isPlaying = NO;
+    [alertView addButtonWithTitle:@"No"
+                             type:SIAlertViewButtonTypeDestructive
+                          handler:^(SIAlertView *alertView) {
+                              NSLog(@"Cancel Clicked");
+                          }];
+    [alertView addButtonWithTitle:@"Yes"
+                             type:SIAlertViewButtonTypeDefault
+                          handler:^(SIAlertView *alertView) {
+                              
+                          }];
+    
+    [alertView show];
 }
 
 - (void)stopPreview:(UIButton *)sender
@@ -192,8 +306,12 @@
     for (int i = 0; i < self.tracks.count; i++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"] forState:UIControlStateNormal];
+        [cell.mediaBtn removeTarget:nil
+                             action:NULL
+                   forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
+                       forState:UIControlStateNormal];
     }
     
     [self.player pause];
@@ -203,74 +321,74 @@
     for (int i = 0; i < self.tracks.count; i++) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
         Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn addTarget:self action:@selector(playPreview:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.mediaBtn addTarget:self
+                          action:@selector(playPreview:)
+                forControlEvents:UIControlEventTouchUpInside];
     }
-    
-    NSLog(@"pausing");
 }
 
-//- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    return 100.0f;
-//}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+-(void)trackDidFinishPlaying:(NSNotification *) notification
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    for (int i = 0; i < self.tracks.count; i++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i
+                                                    inSection:0];
+        
+        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
+                       forState:UIControlStateNormal];
+        
+        [cell.mediaBtn removeTarget:nil
+                             action:NULL
+                   forControlEvents:UIControlEventTouchUpInside];
+        
+        [cell.mediaBtn addTarget:self
+                          action:@selector(playPreview:)
+                forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    self.isPlaying = NO;
+}
+
+#pragma mark - Table view
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    [self configureTableView];
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
+    return self.tracks.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    Track_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"trackCell"
+                                                         forIndexPath:indexPath];
+    
+    [self configureCell:cell
+              IndexPath:indexPath];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath
+                             animated:YES];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main"
+                                                         bundle:nil];
+    
     Tracks_TVC *newTracksTVC = [storyboard instantiateViewControllerWithIdentifier:@"TracksViewController"];
     newTracksTVC.isLoadingRecommendations = YES;
     newTracksTVC.recommendationsParameters = [self.tracks objectAtIndex:indexPath.row];
-    [self.navigationController pushViewController:newTracksTVC animated:YES];
-//    [self performSegueWithIdentifier:@"showRecommendations" sender:indexPath];
+    [self.navigationController pushViewController:newTracksTVC
+                                         animated:YES];
 }
-
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"showRecommendations"]) {
-        Recommendations_TVC *recommendationsTVC = (Recommendations_TVC *)[segue destinationViewController];
-        NSIndexPath *indexPath = (NSIndexPath *)sender;
-        recommendationsTVC.recommendationsParameters = [self.tracks objectAtIndex:indexPath.row];
-    }
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 @end
