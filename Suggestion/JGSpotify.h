@@ -10,14 +10,11 @@
 
 @interface JGSpotify : NSObject
 
-@property (nonatomic, strong) NSString *accessToken;
-@property (nonatomic, strong) NSDate *accessTokenExpires;
 @property (nonatomic, strong) NSMutableString *authorizeUri;
 @property (nonatomic, strong) NSString *callbackUri;
 @property (nonatomic, strong) NSString *clientID;
 @property (nonatomic, strong) NSString *clientSecret;
 @property (nonatomic, strong) NSString *redirectUri;
-@property (nonatomic, strong) NSString *refreshToken;
 @property (nonatomic, strong) NSMutableArray *scopes;
 @property (nonatomic, strong) NSString *tokenUri;
 
@@ -29,7 +26,8 @@
 
 + (JGSpotify *)sharedInstance;
 
-+ (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
++ (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *artist, NSError *error))completionHandler;
++ (void)getArtistTopTracks:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
 + (void)saveTrack:(NSString *)trackID WithCompletionHandler:(void(^)(id track, NSError *error))completionHandler;
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler;
 + (void)getTopTracksCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;

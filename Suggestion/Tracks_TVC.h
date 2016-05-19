@@ -12,6 +12,6 @@
 @interface Tracks_TVC : UITableViewController
 
 @property (nonatomic) BOOL isLoadingRecommendations;
-@property (nonatomic, strong) NSArray *recommendationsParameters;
+@property (nonatomic, strong) NSDictionary *recommendationsParameters;
 
 @end

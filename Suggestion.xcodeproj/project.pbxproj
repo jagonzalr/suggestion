@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4FA2A12B11C4E87C93E6CA48 /* libPods-Suggestion.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EBD3291415497D4B4732306 /* libPods-Suggestion.a */; };
+		951A9FF955BEBF97DA2EB4D2 /* Pods_Suggestion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */; };
 		BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD1426731CE3A279001007A0 /* Track_TVCell.m */; };
 		BD4BDD211CD7F07B00C94FAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD201CD7F07B00C94FAF /* main.m */; };
 		BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD231CD7F07B00C94FAF /* AppDelegate.m */; };
-		BD4BDD271CD7F07B00C94FAF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD261CD7F07B00C94FAF /* ViewController.m */; };
+		BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */; };
 		BD4BDD2A1CD7F07B00C94FAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD4BDD281CD7F07B00C94FAF /* Main.storyboard */; };
 		BD4BDD2D1CD7F07B00C94FAF /* Suggestion.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */; };
 		BD4BDD2F1CD7F07B00C94FAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD4BDD2E1CD7F07B00C94FAF /* Assets.xcassets */; };
@@ -19,21 +19,23 @@
 		BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD3A1CD7F1A600C94FAF /* JGSpotify.m */; };
 		BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD3D1CD804D100C94FAF /* JGSpotifyVerbs.m */; };
 		BD4BDD411CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */; };
+		BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73B81CEE66E200D7F04D /* Artists_TVC.m */; };
+		BDAB73BC1CEE6D5700D7F04D /* Artists_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */; };
 		BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3AD8A8617104B3B0F569FA4E /* Pods-Suggestion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Suggestion.release.xcconfig"; path = "Pods/Target Support Files/Pods-Suggestion/Pods-Suggestion.release.xcconfig"; sourceTree = "<group>"; };
 		780DE16A37AEA60E75109A23 /* Pods-Suggestion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Suggestion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Suggestion/Pods-Suggestion.debug.xcconfig"; sourceTree = "<group>"; };
-		8EBD3291415497D4B4732306 /* libPods-Suggestion.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Suggestion.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Suggestion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1426721CE3A279001007A0 /* Track_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track_TVCell.h; sourceTree = "<group>"; };
 		BD1426731CE3A279001007A0 /* Track_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track_TVCell.m; sourceTree = "<group>"; };
 		BD4BDD1C1CD7F07B00C94FAF /* Suggestion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Suggestion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD4BDD201CD7F07B00C94FAF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BD4BDD221CD7F07B00C94FAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		BD4BDD231CD7F07B00C94FAF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		BD4BDD251CD7F07B00C94FAF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		BD4BDD261CD7F07B00C94FAF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		BD4BDD251CD7F07B00C94FAF /* Authentication_VC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Authentication_VC.h; sourceTree = "<group>"; };
+		BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Authentication_VC.m; sourceTree = "<group>"; };
 		BD4BDD291CD7F07B00C94FAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BD4BDD2C1CD7F07B00C94FAF /* Suggestion.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Suggestion.xcdatamodel; sourceTree = "<group>"; };
 		BD4BDD2E1CD7F07B00C94FAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -45,6 +47,10 @@
 		BD4BDD3D1CD804D100C94FAF /* JGSpotifyVerbs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGSpotifyVerbs.m; sourceTree = "<group>"; };
 		BD4BDD3F1CD80A1200C94FAF /* JGSpotifyAuthorize_VC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGSpotifyAuthorize_VC.h; sourceTree = "<group>"; };
 		BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGSpotifyAuthorize_VC.m; sourceTree = "<group>"; };
+		BDAB73B71CEE66E200D7F04D /* Artists_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Artists_TVC.h; sourceTree = "<group>"; };
+		BDAB73B81CEE66E200D7F04D /* Artists_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Artists_TVC.m; sourceTree = "<group>"; };
+		BDAB73BA1CEE6D5700D7F04D /* Artists_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Artists_TVCell.h; sourceTree = "<group>"; };
+		BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Artists_TVCell.m; sourceTree = "<group>"; };
 		BDF19D8E1CE295A8009B0C0A /* Tracks_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracks_TVC.h; sourceTree = "<group>"; };
 		BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tracks_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -54,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4FA2A12B11C4E87C93E6CA48 /* libPods-Suggestion.a in Frameworks */,
+				951A9FF955BEBF97DA2EB4D2 /* Pods_Suggestion.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +74,33 @@
 				3AD8A8617104B3B0F569FA4E /* Pods-Suggestion.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		BD0CD0FF1CEE464900F3AF53 /* Artists */ = {
+			isa = PBXGroup;
+			children = (
+				BDAB73B71CEE66E200D7F04D /* Artists_TVC.h */,
+				BDAB73B81CEE66E200D7F04D /* Artists_TVC.m */,
+				BDAB73BA1CEE6D5700D7F04D /* Artists_TVCell.h */,
+				BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */,
+			);
+			name = Artists;
+			sourceTree = "<group>";
+		};
+		BD0CD1001CEE465100F3AF53 /* New Releases */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Releases";
+			sourceTree = "<group>";
+		};
+		BD0CD1011CEE466500F3AF53 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				BD4BDD251CD7F07B00C94FAF /* Authentication_VC.h */,
+				BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */,
+			);
+			name = Authentication;
 			sourceTree = "<group>";
 		};
 		BD1426761CE3A285001007A0 /* Tracks */ = {
@@ -103,9 +136,10 @@
 			isa = PBXGroup;
 			children = (
 				BDB6A3391CE433DD00C5B1C5 /* JGSpotify */,
+				BD0CD1011CEE466500F3AF53 /* Authentication */,
+				BD0CD0FF1CEE464900F3AF53 /* Artists */,
 				BD1426761CE3A285001007A0 /* Tracks */,
-				BD4BDD251CD7F07B00C94FAF /* ViewController.h */,
-				BD4BDD261CD7F07B00C94FAF /* ViewController.m */,
+				BD0CD1001CEE465100F3AF53 /* New Releases */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */,
@@ -142,7 +176,7 @@
 		D61128D483A5D07D0EB2CE46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8EBD3291415497D4B4732306 /* libPods-Suggestion.a */,
+				B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -270,9 +304,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BD4BDD411CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m in Sources */,
-				BD4BDD271CD7F07B00C94FAF /* ViewController.m in Sources */,
+				BDAB73BC1CEE6D5700D7F04D /* Artists_TVCell.m in Sources */,
+				BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */,
 				BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */,
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
+				BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */,
 				BD4BDD2D1CD7F07B00C94FAF /* Suggestion.xcdatamodeld in Sources */,
 				BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */,
 				BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */,

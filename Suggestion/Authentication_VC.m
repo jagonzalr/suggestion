@@ -6,20 +6,21 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "Authentication_VC.h"
 #import "JGSpotify.h"
 #import <QuartzCore/QuartzCore.h>
 
 #import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
+#import "SVProgressHUD.h"
 
-@interface ViewController ()
+@interface Authentication_VC ()
 
 @property (weak, nonatomic) IBOutlet UIButton *logInToSpotifyBtn;
 
 @end
 
-@implementation ViewController
+@implementation Authentication_VC
 
 - (void)viewDidLoad
 {
@@ -34,39 +35,22 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
-    NSString *refreshToken = [userDefaults objectForKey:@"spotifyRefreshToken"];
-
+    
     if (accessToken != nil) {
         NSDate *now = [NSDate date];
         NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
         if (distanceBetweenDates < 60) {
+            [SVProgressHUD show];
             [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
                 if (result) {
-                    [self setSpotifyToken:accessToken
-                       AccessTokenExpires:accessTokenExpires
-                          AndRefreshToken:refreshToken];
-                    
+                    [SVProgressHUD dismiss];
                     [self showTracks];
                 }
             }];
         } else {
-            [self setSpotifyToken:accessToken
-               AccessTokenExpires:accessTokenExpires
-                  AndRefreshToken:refreshToken];
-            
             [self showTracks];
         }
     }
-}
-
-- (void)setSpotifyToken:(NSString *)accessToken
-     AccessTokenExpires:(NSDate *)accessTokenExpires
-        AndRefreshToken:(NSString *)refreshToken
-{
-    JGSpotify *spotify = [JGSpotify sharedInstance];
-    spotify.accessToken = accessToken;
-    spotify.accessTokenExpires = accessTokenExpires;
-    spotify.refreshToken = refreshToken;
 }
 
 - (void)showTracks

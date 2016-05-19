@@ -23,21 +23,14 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
-//    [spotify.scopes addObject:@"playlist-modify-public"];
-//    [spotify.scopes addObject:@"playlist-modify-private"];
-//    [spotify.scopes addObject:@"playlist-read-collaborative"];
-//    [spotify.scopes addObject:@"playlist-read-private"];
-    [spotify.scopes addObject:@"user-library-modify"];
-    [spotify.scopes addObject:@"user-library-read"];
-    [spotify.scopes addObject:@"user-top-read"];
-    
+    // Setup UINavigation appearance
     [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
                                                            NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]}];
     
+    // Setup UITabBar appearance
     [[UITabBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
     [[UITabBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
@@ -45,6 +38,7 @@
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"suggestion://oauth"]];
     
+    // Setup Spotify client
     NSMutableArray *scopes = [[NSMutableArray alloc] init];
     [scopes addObject:@"user-library-modify"];
     [scopes addObject:@"user-library-read"];
@@ -56,6 +50,7 @@
                     CallbackUri: @"suggestion://oauth"
                  AndRedirectUri:@"suggestion://oauth"];
     
+    // Setup SIAlertView appearance
     [[SIAlertView appearance] setTitleFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
     [[SIAlertView appearance] setMessageFont:[UIFont fontWithName:@"Avenir Next" size:14.0f]];
     [[SIAlertView appearance] setTitleColor:[UIColor colorWithHexString:@"414141"]];
@@ -67,6 +62,7 @@
     [[SIAlertView appearance] setTransitionStyle:SIAlertViewTransitionStyleFade];
     [[SIAlertView appearance] setBackgroundStyle:SIAlertViewBackgroundStyleGradient];
     
+    // Setup SVProgressHUD appearance
     [SVProgressHUD setCornerRadius:4.0f];
     [SVProgressHUD setFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
     [SVProgressHUD setBackgroundColor:[UIColor colorWithHexString:@"414141"]];

@@ -12,14 +12,11 @@
 
 @implementation JGSpotify
 
-@synthesize accessToken;
-@synthesize accessTokenExpires;
 @synthesize authorizeUri;
 @synthesize callbackUri;
 @synthesize clientID;
 @synthesize clientSecret;
 @synthesize redirectUri;
-@synthesize refreshToken;
 @synthesize scopes;
 @synthesize tokenUri;
 
@@ -31,14 +28,11 @@
 {
     JGSpotify *spotify = [JGSpotify sharedInstance];
     
-    spotify.accessToken = @"";
-    spotify.accessTokenExpires = [[NSDate alloc] init];
     spotify.authorizeUri = [[NSMutableString alloc] init];
     spotify.callbackUri = callbackUri;
     spotify.clientID = clientID;
     spotify.clientSecret = clientSecret;
     spotify.redirectUri = redirectUri;
-    spotify.refreshToken = @"";
     spotify.scopes = [[NSMutableArray alloc] init];
     spotify.tokenUri = @"https://accounts.spotify.com/api/token";
     
@@ -97,7 +91,6 @@
     JGSpotify *spotify = [JGSpotify sharedInstance];
     NSURL *tokenUrl = [NSURL URLWithString:spotify.tokenUri];
     
-    
     NSURL *authorizationUrl = [NSURL URLWithString:spotify.authorizeUri];
     NSURL *callbackUrl = [NSURL URLWithString:spotify.callbackUri];
     JGSpotifyAuthorize_VC *spotifyAuthorizeVC = [[JGSpotifyAuthorize_VC alloc] initWithAuthorizeUrl:authorizationUrl AndCallbackUrl:callbackUrl];
@@ -115,18 +108,14 @@
                 
             } else {
                 NSString *payload = [NSString stringWithFormat:@"grant_type=authorization_code&code=%@&redirect_uri=%@", code, spotify.redirectUri];
-                [spotify getAccessToken:tokenUrl
-                                Payload:payload
-                      CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
+                [JGSpotify getAccessToken:tokenUrl
+                                  Payload:payload
+                        CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
                  {
-                     spotify.accessToken = responseObject[@"access_token"];
-                     spotify.refreshToken = responseObject[@"refresh_token"];
-                     spotify.accessTokenExpires = [NSDate dateWithTimeIntervalSinceNow:3500];
-                     
                      NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                     [userDefaults setObject:spotify.accessToken forKey:@"spotifyAccessToken"];
-                     [userDefaults setObject:spotify.accessTokenExpires forKey:@"spotifyAccessTokenExpires"];
-                     [userDefaults setObject:spotify.refreshToken forKey:@"spotifyRefreshToken"];
+                     [userDefaults setObject:responseObject[@"access_token"] forKey:@"spotifyAccessToken"];
+                     [userDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:3500]forKey:@"spotifyAccessTokenExpires"];
+                     [userDefaults setObject:responseObject[@"refresh_token"] forKey:@"spotifyRefreshToken"];
                      [userDefaults synchronize];
                      
                      completionHandler(YES, nil);
@@ -140,21 +129,18 @@
 
 - (void)refreshTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
 {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     JGSpotify *spotify = [JGSpotify sharedInstance];
     NSURL *tokenUrl = [NSURL URLWithString:spotify.tokenUri];
-    NSString *payload = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@", spotify.refreshToken];
-    [spotify getAccessToken:tokenUrl
+    NSString *payload = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@", [userDefaults objectForKey:@"spotifyRefreshToken"]];
+    
+    [JGSpotify getAccessToken:tokenUrl
                     Payload:payload
           CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
      {
-         spotify.accessToken = responseObject[@"access_token"];
-         spotify.refreshToken = responseObject[@"refresh_token"];
-         spotify.accessTokenExpires = [NSDate dateWithTimeIntervalSinceNow:3500];
-         
          NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-         [userDefaults setObject:spotify.accessToken forKey:@"spotifyAccessToken"];
-         [userDefaults setObject:spotify.accessTokenExpires forKey:@"spotifyAccessTokenExpires"];
-         [userDefaults setObject:spotify.refreshToken forKey:@"spotifyRefreshToken"];
+         [userDefaults setObject:responseObject[@"access_token"] forKey:@"spotifyAccessToken"];
+         [userDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:3500] forKey:@"spotifyAccessTokenExpires"];
          [userDefaults synchronize];
          
          completionHandler(YES, nil);
@@ -164,23 +150,25 @@
 
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/artists?limit=50"];
-    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
 }
 
 + (void)saveTrack:(NSString *)trackID WithCompletionHandler:(void(^)(id track, NSError *error))completionHandler
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/me/tracks?ids=%@", trackID]];
-    [JGSpotifyVerbs JGSpotifyPutVerb:url Payload:@"" AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    [JGSpotifyVerbs JGSpotifyPutVerb:url Payload:@"" AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
 }
 
-- (void)getAccessToken:(NSURL *)tokenUrl
++ (void)getAccessToken:(NSURL *)tokenUrl
                Payload:(NSString *)payload
      CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
 {
@@ -198,30 +186,44 @@
 
 + (void)getTopTracksCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/tracks?limit=50"];
-    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
 }
 
-+ (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler
++ (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *artist, NSError *error))completionHandler
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/artists/%@", artistID]];
-    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        completionHandler(responseObject, error);
+    }];
+}
+
++ (void)getArtistTopTracks:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/artists/%@/top-tracks?country=US", artistID]];
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
 }
 
 + (void)refreshAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
 {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *refresToken = [userDefaults objectForKey:@"spotifyRefreshToken"];
     JGSpotify *spotify = [JGSpotify sharedInstance];
     NSURL *tokenUrl = [NSURL URLWithString:spotify.tokenUri];
-    NSString *payload = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@", spotify.refreshToken];
-    [spotify getAccessToken:tokenUrl
-                    Payload:payload
-          CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
+    NSString *payload = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@", refresToken];
+    [JGSpotify getAccessToken:tokenUrl
+                      Payload:payload
+            CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
      {
          completionHandler(YES, nil);
      }];
@@ -229,12 +231,13 @@
 
 + (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(NSDictionary *recommendations, NSError *error))completionHandler
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSString *recommendations = [NSString stringWithFormat:@"https://api.spotify.com/v1/recommendations?seed_artists=%@&seed_tracks=%@&seed_genres=%@min_popularity=%@",
                                  seedArtist, seedTrack, seedGenre, popularity];
     
     NSURL *url = [NSURL URLWithString:recommendations];
-    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
 }

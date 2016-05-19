@@ -66,12 +66,12 @@
 
 - (void)configureCell:(Track_TVCell *)cell IndexPath:(NSIndexPath *)indexPath
 {
-    cell.song.text = [self.tracks objectAtIndex:indexPath.row][0];
-    cell.artist.text = [self.tracks objectAtIndex:indexPath.row][2];
+    cell.song.text = [self.tracks objectAtIndex:indexPath.row][@"name"];
+    cell.artist.text = [self.tracks objectAtIndex:indexPath.row][@"artists"][0][@"name"];
     cell.artist.text = cell.artist.text.uppercaseString;
-    cell.album.text = [self.tracks objectAtIndex:indexPath.row][6];
+    cell.album.text = [self.tracks objectAtIndex:indexPath.row][@"album"][@"name"];
     cell.album.text = cell.album.text.uppercaseString;
-    
+
     cell.song.textColor = [UIColor colorWithHexString:@"414141"];
     cell.artist.textColor = [UIColor colorWithHexString:@"414141"];
     cell.album.textColor = [UIColor colorWithHexString:@"414141"];
@@ -134,9 +134,9 @@
             [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
              {
                  dispatch_async(dispatch_get_main_queue(), ^{
-                     for (NSDictionary *trackInfo in tracks[@"items"]) {
+                     for (NSDictionary *track in tracks[@"items"]) {
                          [self.tableView beginUpdates];
-                         [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"], trackInfo[@"id"], trackInfo[@"artists"][0][@"id"], trackInfo[@"uri"], trackInfo[@"album"][@"name"]]];
+                         [self.tracks addObject:track];
                          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
                                                                      inSection:0];
                          
@@ -162,27 +162,57 @@
     [SVProgressHUD show];
     [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
         if (result) {
-            [JGSpotify getRecommendationsWithSeedArtist:self.recommendationsParameters[4]
-                                              SeedTrack:self.recommendationsParameters[3]
-                                              SeedGenre:@""
-                                             Popularity:@"50"
-                                   AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     for (NSDictionary *recommendationInfo in recommendations[@"tracks"]) {
-                         [self.tableView beginUpdates];
-                         [self.tracks addObject:@[recommendationInfo[@"name"], recommendationInfo[@"preview_url"], recommendationInfo[@"artists"][0][@"name"], recommendationInfo[@"id"], recommendationInfo[@"artists"][0][@"id"], recommendationInfo[@"uri"], recommendationInfo[@"album"][@"name"]]];
-                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
-                                                                     inSection:0];
-                         
-                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                               withRowAnimation:UITableViewRowAnimationFade];
-                         
-                         [self.tableView endUpdates];
-                     }
-                     [SVProgressHUD dismiss];
-                 });
-             }];
+            __block NSString *seedArtistID = @"";
+            __block NSString *seedTrackID = @"";
+            __block NSString *seedGenreID = @"";
+            __block BOOL isArtist = [self.recommendationsParameters objectForKey:@"genres"] ? YES : NO;
+            
+            if ([self.recommendationsParameters objectForKey:@"artists"]) {
+                seedArtistID = [self.recommendationsParameters objectForKey:@"artists"][0][@"id"];
+            } else {
+                seedArtistID = [self.recommendationsParameters objectForKey:@"id"];
+            }
+            
+            [JGSpotify getArtistTopTracks:seedArtistID WithCompletionHandler:^(NSDictionary *tracks, NSError *error) {
+                NSMutableArray *trackIDs = [[NSMutableArray alloc] init];
+                int tracksMaxCount = 2;
+                if (!isArtist) {
+                    [trackIDs addObject:[self.recommendationsParameters objectForKey:@"id"]];
+                }
+                
+                for (NSDictionary *track in tracks[@"tracks"]) {
+                    if (![trackIDs containsObject:track[@"id"]]) {
+                        [trackIDs addObject:track[@"id"]];
+                        if (trackIDs.count == tracksMaxCount) {
+                            break;
+                        }
+                    }
+                }
+                
+                seedTrackID = [NSString stringWithFormat:@"%@,%@", trackIDs[0], trackIDs[1]];
+                [JGSpotify getRecommendationsWithSeedArtist:seedArtistID
+                                                  SeedTrack:seedTrackID
+                                                  SeedGenre:seedGenreID
+                                                 Popularity:@"50"
+                                       AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
+                 {
+                     dispatch_async(dispatch_get_main_queue(), ^{
+                         for (NSDictionary *recommendation in recommendations[@"tracks"]) {
+                             [self.tableView beginUpdates];
+                             [self.tracks addObject:recommendation];
+                             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                                         inSection:0];
+                             
+                             [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                   withRowAnimation:UITableViewRowAnimationFade];
+                             
+                             [self.tableView endUpdates];
+                         }
+                         [SVProgressHUD dismiss];
+                     });
+                 }];
+            }];
+            
         } else {
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -300,10 +330,13 @@
                       action:@selector(stopPreview:)
             forControlEvents:UIControlEventTouchUpInside];
     
-    NSURL *url = [NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][1]];
+    NSURL *url = [NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"preview_url"]];
     AVPlayerItem* playerItem = [AVPlayerItem playerItemWithURL:url];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackDidFinishPlaying:) name:AVPlayerItemDidPlayToEndTimeNotification object:playerItem];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(trackDidFinishPlaying:)
+                                                 name:AVPlayerItemDidPlayToEndTimeNotification
+                                               object:playerItem];
     
     self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
     self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
@@ -468,5 +501,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     [self.navigationController pushViewController:newTracksTVC
                                          animated:YES];
 }
+
+
 
 @end

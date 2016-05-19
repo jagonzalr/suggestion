@@ -2,16 +2,19 @@ PODS:
   - ChameleonFramework (2.1.0):
     - ChameleonFramework/Default (= 2.1.0)
   - ChameleonFramework/Default (2.1.0)
+  - M13InfiniteTabBar (2.3.2)
   - SIAlertView (1.3)
   - SVProgressHUD (2.0.3)
 
 DEPENDENCIES:
   - ChameleonFramework
+  - M13InfiniteTabBar (~> 2.3)
   - SIAlertView
   - SVProgressHUD
 
 SPEC CHECKSUMS:
   ChameleonFramework: d21a3cc247abfe5e37609a283a8238b03575cf64
+  M13InfiniteTabBar: a3c75ba96ac7bc38415faa8bbf9ff286bbed8014
   SIAlertView: 20c794b55eaf44d888773ea51647cf8907723919
   SVProgressHUD: b0830714205bea1317ea1a2ebc71e5633af334d4
 
