@@ -35,8 +35,6 @@
     [[UINavigationBar appearance] setTranslucent:NO];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
-//    [[UINavigationBar appearance] setShadowImage:[UIImage new]];
-//    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
                                                            NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]}];
     
@@ -60,7 +58,6 @@
     [[SIAlertView appearance] setCornerRadius:4];
     [[SIAlertView appearance] setShadowRadius:50];
     [[SIAlertView appearance] setViewBackgroundColor:[UIColor colorWithHexString:@"F9F9F9"]];
-    
     [[SIAlertView appearance] setButtonFont:[UIFont fontWithName:@"AvenirNext-Bold" size:14.0f]];
     [[SIAlertView appearance] setTransitionStyle:SIAlertViewTransitionStyleFade];
     [[SIAlertView appearance] setBackgroundStyle:SIAlertViewBackgroundStyleGradient];
@@ -68,12 +65,17 @@
     [SVProgressHUD setCornerRadius:4.0f];
     [SVProgressHUD setFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
     [SVProgressHUD setBackgroundColor:[UIColor colorWithHexString:@"414141"]];
-    [SVProgressHUD setForegroundColor:[UIColor colorWithHexString:@"F9F9F9"]];
+    [SVProgressHUD setForegroundColor:[UIColor colorWithHexString:@"FEFEFE"]];
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
     [SVProgressHUD setRingThickness:4.0f];
     [SVProgressHUD setRingRadius:20.0f];
     [SVProgressHUD setRingNoTextRadius:26.0f];
     [SVProgressHUD setDefaultAnimationType:SVProgressHUDAnimationTypeFlat];
+    
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyAccessToken"];
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyAccessTokenExpires"];
+//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyRefreshToken"];
+//    [[NSUserDefaults standardUserDefaults] synchronize];
     
     return YES;
 }

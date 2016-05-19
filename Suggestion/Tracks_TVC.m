@@ -128,62 +128,92 @@
 
 - (void)loadTop
 {
-    [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
-     {
-         dispatch_async(dispatch_get_main_queue(), ^{
-             for (NSDictionary *trackInfo in tracks[@"items"]) {
-                 [self.tableView beginUpdates];
-                 [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"], trackInfo[@"id"], trackInfo[@"artists"][0][@"id"], trackInfo[@"uri"], trackInfo[@"album"][@"name"]]];
-                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
-                                                             inSection:0];
-                 
-                 [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                       withRowAnimation:UITableViewRowAnimationFade];
-                 
-                 [self.tableView endUpdates];
-             }
-         });
-         [SVProgressHUD dismiss];
-     }];
+    [SVProgressHUD show];
+    [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+        if (result) {
+            [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     for (NSDictionary *trackInfo in tracks[@"items"]) {
+                         [self.tableView beginUpdates];
+                         [self.tracks addObject:@[trackInfo[@"name"], trackInfo[@"preview_url"], trackInfo[@"artists"][0][@"name"], trackInfo[@"id"], trackInfo[@"artists"][0][@"id"], trackInfo[@"uri"], trackInfo[@"album"][@"name"]]];
+                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                                     inSection:0];
+                         
+                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                               withRowAnimation:UITableViewRowAnimationFade];
+                         
+                         [self.tableView endUpdates];
+                     }
+                 });
+                 [SVProgressHUD dismiss];
+             }];
+        } else {
+            [SVProgressHUD dismiss];
+            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
+            [self presentViewController:initialNavController animated:YES completion:nil];
+        }
+    }];
 }
 
 - (void)loadRecommendations
 {
     [SVProgressHUD show];
-    [JGSpotify getRecommendationsWithSeedArtist:self.recommendationsParameters[4]
-                                      SeedTrack:self.recommendationsParameters[3]
-                                      SeedGenre:@""
-                                     Popularity:@"50"
-                           AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
-     {
-         dispatch_async(dispatch_get_main_queue(), ^{
-             for (NSDictionary *recommendationInfo in recommendations[@"tracks"]) {
-                 [self.tableView beginUpdates];
-                 [self.tracks addObject:@[recommendationInfo[@"name"], recommendationInfo[@"preview_url"], recommendationInfo[@"artists"][0][@"name"], recommendationInfo[@"id"], recommendationInfo[@"artists"][0][@"id"], recommendationInfo[@"uri"], recommendationInfo[@"album"][@"name"]]];
-                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
-                                                             inSection:0];
-                 
-                 [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                       withRowAnimation:UITableViewRowAnimationFade];
-                 
-                 [self.tableView endUpdates];
-             }
-             [SVProgressHUD dismiss];
-         });
-     }];
-
+    [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+        if (result) {
+            [JGSpotify getRecommendationsWithSeedArtist:self.recommendationsParameters[4]
+                                              SeedTrack:self.recommendationsParameters[3]
+                                              SeedGenre:@""
+                                             Popularity:@"50"
+                                   AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
+             {
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     for (NSDictionary *recommendationInfo in recommendations[@"tracks"]) {
+                         [self.tableView beginUpdates];
+                         [self.tracks addObject:@[recommendationInfo[@"name"], recommendationInfo[@"preview_url"], recommendationInfo[@"artists"][0][@"name"], recommendationInfo[@"id"], recommendationInfo[@"artists"][0][@"id"], recommendationInfo[@"uri"], recommendationInfo[@"album"][@"name"]]];
+                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                                     inSection:0];
+                         
+                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                               withRowAnimation:UITableViewRowAnimationFade];
+                         
+                         [self.tableView endUpdates];
+                     }
+                     [SVProgressHUD dismiss];
+                 });
+             }];
+        } else {
+            [SVProgressHUD dismiss];
+            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
+            [self presentViewController:initialNavController animated:YES completion:nil];
+        }
+    }];
 }
 
 - (void)loadTracks
 {
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        if (self.isLoadingRecommendations) {
-            [self loadRecommendations];
-        } else {
-            [self loadTop];
-        }
+        self.isLoadingRecommendations ? [self loadRecommendations] : [self loadTop];
     });
+}
+
+- (void)verifyAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
+{
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
+    
+    NSDate *now = [NSDate date];
+    NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
+    if (distanceBetweenDates < 60) {
+        [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+            completionHandler(result, nil);
+        }];
+    } else {
+        completionHandler(YES, nil);
+    }
 }
 
 

@@ -14,8 +14,6 @@
                 AuthorizationCode:(NSString *)authorizationCode
        CompletionHandler:(void(^)(NSURLResponse *response, id responseObject, NSError *error))completionHandler
 {
-    
-    
     NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
     [urlRequest setURL:url];
     [urlRequest setHTTPMethod:@"GET"];
@@ -45,7 +43,6 @@
                                       }];
     
     [dataTask resume];
-
 }
 
 + (void)JGSpotifyPostVerb:(NSURL *)url

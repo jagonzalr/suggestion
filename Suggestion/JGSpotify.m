@@ -138,6 +138,30 @@
     };
 }
 
+- (void)refreshTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
+{
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSURL *tokenUrl = [NSURL URLWithString:spotify.tokenUri];
+    NSString *payload = [NSString stringWithFormat:@"grant_type=refresh_token&refresh_token=%@", spotify.refreshToken];
+    [spotify getAccessToken:tokenUrl
+                    Payload:payload
+          CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
+     {
+         spotify.accessToken = responseObject[@"access_token"];
+         spotify.refreshToken = responseObject[@"refresh_token"];
+         spotify.accessTokenExpires = [NSDate dateWithTimeIntervalSinceNow:3500];
+         
+         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+         [userDefaults setObject:spotify.accessToken forKey:@"spotifyAccessToken"];
+         [userDefaults setObject:spotify.accessTokenExpires forKey:@"spotifyAccessTokenExpires"];
+         [userDefaults setObject:spotify.refreshToken forKey:@"spotifyRefreshToken"];
+         [userDefaults synchronize];
+         
+         completionHandler(YES, nil);
+     }];
+}
+
+
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler
 {
     JGSpotify *spotify = [JGSpotify sharedInstance];

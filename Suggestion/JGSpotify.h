@@ -36,5 +36,6 @@
 + (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(NSDictionary *recommendations, NSError *error))completionHandler;
 
 - (void)authorizeWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
+- (void)refreshTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
 
 @end
