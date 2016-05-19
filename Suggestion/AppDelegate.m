@@ -38,6 +38,11 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
                                                            NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]}];
     
+    [[UITabBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
+    [[UITabBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
+                                                        NSFontAttributeName:[UIFont fontWithName:@"Avenir Next" size:10.0f]} forState:UIControlStateSelected];
+    
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"suggestion://oauth"]];
     
     NSMutableArray *scopes = [[NSMutableArray alloc] init];

@@ -72,7 +72,7 @@
 - (void)showTracks
 {
     UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TracksNavController"];
+    UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TabBarController"];
     [self presentViewController:initialNavController animated:YES completion:nil];
 }
 
