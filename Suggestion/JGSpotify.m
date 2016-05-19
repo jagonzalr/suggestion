@@ -141,7 +141,7 @@
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler
 {
     JGSpotify *spotify = [JGSpotify sharedInstance];
-    NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/artists"];
+    NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/artists?limit=50"];
     [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];
@@ -175,7 +175,7 @@
 + (void)getTopTracksCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler
 {
     JGSpotify *spotify = [JGSpotify sharedInstance];
-    NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/tracks"];
+    NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/me/top/tracks?limit=50"];
     [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:spotify.accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];

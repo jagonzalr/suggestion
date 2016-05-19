@@ -15,6 +15,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *album;
 @property (weak, nonatomic) IBOutlet UIButton *mediaBtn;
 @property (weak, nonatomic) IBOutlet UIButton *openInSpotifyBtn;
-@property (weak, nonatomic) IBOutlet UIButton *likeBtn;
+@property (weak, nonatomic) IBOutlet UIButton *saveTrackBtn;
 
 @end

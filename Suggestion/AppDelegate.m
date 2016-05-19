@@ -43,10 +43,12 @@
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"suggestion://oauth"]];
     
     NSMutableArray *scopes = [[NSMutableArray alloc] init];
+    [scopes addObject:@"user-library-modify"];
+    [scopes addObject:@"user-library-read"];
     [scopes addObject:@"user-top-read"];
     
     [JGSpotify initWithClientID:@"d8d8cd82ff804b749bbf7924c63c9f9c"
-                   ClientSecret:@"2d43f9cc78db4b9fb34f0457a09999fd"
+                   ClientSecret:@"15bf912dfcb44b61bb1e0aced260ba9e"
                          Scopes:scopes
                     CallbackUri: @"suggestion://oauth"
                  AndRedirectUri:@"suggestion://oauth"];

@@ -82,13 +82,13 @@
     cell.selectedBackgroundView = cellBackgroundView;
     cell.backgroundColor = [UIColor clearColor];
     
-    cell.likeBtn.tag = indexPath.row;
+    cell.saveTrackBtn.tag = indexPath.row;
     cell.mediaBtn.tag = indexPath.row;
     cell.openInSpotifyBtn.tag = indexPath.row;
     
-    [cell.likeBtn addTarget:self
-                     action:@selector(saveTrack:)
-           forControlEvents:UIControlEventTouchUpInside];
+    [cell.saveTrackBtn addTarget:self
+                          action:@selector(saveTrack:)
+                forControlEvents:UIControlEventTouchUpInside];
     
     [cell.mediaBtn addTarget:self
                       action:@selector(playPreview:)
@@ -123,11 +123,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    if (self.isLoadingRecommendations) {
-        self.title = @"Recommendations".uppercaseString;
-    } else {
-        self.title = @"Songs".uppercaseString;
-    }
+    self.title = self.isLoadingRecommendations ? @"Recommendations" : @"Songs";
 }
 
 - (void)loadTop
@@ -142,7 +138,7 @@
                                                              inSection:0];
                  
                  [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                       withRowAnimation:UITableViewRowAnimationAutomatic];
+                                       withRowAnimation:UITableViewRowAnimationFade];
                  
                  [self.tableView endUpdates];
              }
@@ -168,7 +164,7 @@
                                                              inSection:0];
                  
                  [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                       withRowAnimation:UITableViewRowAnimationAutomatic];
+                                       withRowAnimation:UITableViewRowAnimationFade];
                  
                  [self.tableView endUpdates];
              }
@@ -195,8 +191,8 @@
 
 - (void)openInSpotify:(UIButton *)sender
 {
-    NSString *title = @"Do you want to leave the app?";
-    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify", [self.tracks objectAtIndex:sender.tag][0]];
+    NSString *title = @"What do you want to do?";
+    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                      andMessage:message];
     
@@ -205,8 +201,14 @@
                           handler:^(SIAlertView *alertView) {
                               NSLog(@"Cancel Clicked");
                           }];
+    [alertView addButtonWithTitle:@""
+                             type:SIAlertViewButtonTypeCancel
+                          handler:^(SIAlertView *alertView) {
+                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
+                          }];
+    
     [alertView addButtonWithTitle:@"Yes"
-                             type:SIAlertViewButtonTypeDefault
+                             type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
                               [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
                           }];
@@ -277,12 +279,11 @@
     self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
     self.player.volume = 1.0f;
     [self.player play];
-    NSLog(@"playing");
 }
+
 
 - (void)saveTrack:(UIButton *)sender
 {
-    [SVProgressHUD show];
     NSString *title = @"Do you want to save this track?";
     NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
@@ -293,8 +294,9 @@
                           handler:nil];
     
     [alertView addButtonWithTitle:@"Yes"
-                             type:SIAlertViewButtonTypeDefault
+                             type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
+                              [SVProgressHUD show];
                               [JGSpotify saveTrack:[self.tracks objectAtIndex:sender.tag][3] WithCompletionHandler:^(id artist, NSError *error) {
                                   [SVProgressHUD dismiss];
                                   dispatch_async(dispatch_get_main_queue(), ^{
@@ -314,13 +316,13 @@
                                               [alertView show];
                                           } else {
                                               NSString *successTitle = @"Success";
-                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify", [self.tracks objectAtIndex:sender.tag][0]];
+                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
                                               
                                               SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
                                                                                                andMessage:successMessage];
                                               
                                               [alertView addButtonWithTitle:@"Ok"
-                                                                       type:SIAlertViewButtonTypeDefault
+                                                                       type:SIAlertViewButtonTypeCancel
                                                                     handler:nil];
                                               [alertView show];
                                           }

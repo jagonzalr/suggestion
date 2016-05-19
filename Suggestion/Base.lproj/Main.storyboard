@@ -47,11 +47,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="trackCell" rowHeight="150" id="hkY-By-17x" customClass="Track_TVCell">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="trackCell" rowHeight="150" id="hkY-By-17x" customClass="Track_TVCell">
                                 <rect key="frame" x="0.0" y="92" width="600" height="150"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hkY-By-17x" id="cGp-dJ-UpY">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="149"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="149"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oj7-Yx-4Ub">
@@ -70,54 +70,54 @@
                                             <rect key="frame" x="284" y="58" width="33" height="33"/>
                                             <state key="normal" image="Play"/>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJN-HL-2hj">
-                                            <rect key="frame" x="8" y="50" width="50" height="50"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="50" id="8bn-6M-gjg"/>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="Uxm-EP-Pia"/>
-                                                <constraint firstAttribute="height" constant="50" id="eSh-zJ-nQs"/>
-                                            </constraints>
-                                            <state key="normal" backgroundImage="Spotify"/>
-                                        </button>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPn-TB-ccw">
                                             <rect key="frame" x="287" y="30" width="27" height="14"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="10"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vLm-Dr-tlU">
-                                            <rect key="frame" x="542" y="50" width="50" height="50"/>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IJN-HL-2hj">
+                                            <rect key="frame" x="8" y="8" width="30" height="30"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="50" id="6fg-pC-3Ze"/>
-                                                <constraint firstAttribute="height" constant="50" id="HFj-Wr-Qwq"/>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="50" id="bOH-LT-Lb6"/>
+                                                <constraint firstAttribute="width" constant="30" id="8bn-6M-gjg"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="Uxm-EP-Pia"/>
+                                                <constraint firstAttribute="height" constant="30" id="eSh-zJ-nQs"/>
                                             </constraints>
-                                            <state key="normal" backgroundImage="Like"/>
+                                            <state key="normal" backgroundImage="Spotify"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7sr-6G-i3u">
+                                            <rect key="frame" x="8" y="111" width="30" height="30"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="30" id="9B5-0D-YE7"/>
+                                                <constraint firstAttribute="width" constant="30" id="YQA-MI-sl4"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="p8d-Yj-n5J"/>
+                                            </constraints>
+                                            <state key="normal" backgroundImage="Save"/>
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="vLm-Dr-tlU" firstAttribute="trailing" secondItem="cGp-dJ-UpY" secondAttribute="trailingMargin" id="4Mg-zz-Jtq"/>
-                                        <constraint firstItem="vLm-Dr-tlU" firstAttribute="top" secondItem="IJN-HL-2hj" secondAttribute="top" id="8E2-Gm-OS2"/>
                                         <constraint firstItem="2oH-zI-HBx" firstAttribute="top" secondItem="cfe-hB-YiP" secondAttribute="bottom" constant="36" id="B34-cJ-bpo"/>
-                                        <constraint firstItem="Oj7-Yx-4Ub" firstAttribute="centerX" secondItem="cGp-dJ-UpY" secondAttribute="centerX" id="DGB-Jj-FOg"/>
+                                        <constraint firstItem="Oj7-Yx-4Ub" firstAttribute="centerX" secondItem="cGp-dJ-UpY" secondAttribute="centerX" constant="16.5" id="DGB-Jj-FOg"/>
+                                        <constraint firstItem="7sr-6G-i3u" firstAttribute="leading" secondItem="IJN-HL-2hj" secondAttribute="leading" id="EB7-bc-wDi"/>
                                         <constraint firstAttribute="leadingMargin" secondItem="IJN-HL-2hj" secondAttribute="leading" id="HY8-8l-Dew"/>
                                         <constraint firstItem="cfe-hB-YiP" firstAttribute="top" secondItem="Oj7-Yx-4Ub" secondAttribute="bottom" constant="25" id="JTR-QM-RLK"/>
                                         <constraint firstItem="cfe-hB-YiP" firstAttribute="top" secondItem="PPn-TB-ccw" secondAttribute="bottom" constant="14" id="JxC-ZB-mzi"/>
                                         <constraint firstItem="Oj7-Yx-4Ub" firstAttribute="centerX" secondItem="2oH-zI-HBx" secondAttribute="centerX" id="LBq-Fw-4SV"/>
-                                        <constraint firstItem="IJN-HL-2hj" firstAttribute="top" secondItem="cGp-dJ-UpY" secondAttribute="topMargin" constant="42" id="LtV-t6-h6q"/>
+                                        <constraint firstItem="IJN-HL-2hj" firstAttribute="top" secondItem="cGp-dJ-UpY" secondAttribute="topMargin" id="LtV-t6-h6q"/>
+                                        <constraint firstItem="7sr-6G-i3u" firstAttribute="bottom" secondItem="2oH-zI-HBx" secondAttribute="bottom" id="XBV-dV-4eI"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="2oH-zI-HBx" secondAttribute="bottom" id="bTU-cS-Uzb"/>
                                         <constraint firstItem="Oj7-Yx-4Ub" firstAttribute="centerX" secondItem="cfe-hB-YiP" secondAttribute="centerX" id="bb8-Z0-zKM"/>
-                                        <constraint firstItem="PPn-TB-ccw" firstAttribute="centerX" secondItem="cGp-dJ-UpY" secondAttribute="centerX" id="fNp-R4-IjV"/>
+                                        <constraint firstItem="PPn-TB-ccw" firstAttribute="centerX" secondItem="cGp-dJ-UpY" secondAttribute="centerX" constant="17" id="fNp-R4-IjV"/>
                                         <constraint firstAttribute="topMargin" secondItem="Oj7-Yx-4Ub" secondAttribute="top" id="hYl-5l-3hy"/>
-                                        <constraint firstItem="IJN-HL-2hj" firstAttribute="centerY" secondItem="cGp-dJ-UpY" secondAttribute="centerY" id="lVO-a4-PGr"/>
+                                        <constraint firstItem="IJN-HL-2hj" firstAttribute="centerY" secondItem="cGp-dJ-UpY" secondAttribute="centerY" constant="-51.5" id="lVO-a4-PGr"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="album" destination="PPn-TB-ccw" id="xAB-v5-qPV"/>
                                     <outlet property="artist" destination="2oH-zI-HBx" id="VWO-5O-nmn"/>
-                                    <outlet property="likeBtn" destination="vLm-Dr-tlU" id="lEL-Nk-wgt"/>
                                     <outlet property="mediaBtn" destination="cfe-hB-YiP" id="1rH-3R-kKH"/>
                                     <outlet property="openInSpotifyBtn" destination="IJN-HL-2hj" id="TEZ-Lb-KMZ"/>
+                                    <outlet property="saveTrackBtn" destination="7sr-6G-i3u" id="YfS-nX-Fca"/>
                                     <outlet property="song" destination="Oj7-Yx-4Ub" id="nG7-0T-GWI"/>
                                 </connections>
                             </tableViewCell>
@@ -153,8 +153,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="Like" width="33" height="33"/>
         <image name="Play" width="33" height="33"/>
+        <image name="Save" width="33" height="33"/>
         <image name="Spotify" width="236" height="236"/>
     </resources>
 </document>
