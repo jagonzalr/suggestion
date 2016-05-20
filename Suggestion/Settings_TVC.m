@@ -9,6 +9,8 @@
 #import "Settings_TVC.h"
 #import "JGStyles.h"
 
+static NSString *CellIdentifier = @"settingCell";
+
 @interface Settings_TVC ()
 
 @property (nonatomic, strong) NSMutableArray *settings;

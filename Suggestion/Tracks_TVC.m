@@ -14,6 +14,8 @@
 #import "SIAlertView.h"
 #import "SVProgressHUD.h"
 
+static NSString *CellIdentifier = @"trackCell";
+
 @interface Tracks_TVC ()
 
 @property (nonatomic) BOOL isPlaying;

@@ -37,5 +37,6 @@ extern NSString * const kWhiteColor;
 + (UIFont *)normalFont:(CGFloat)size;
 
 + (void)configureTabBar:(UITabBar *)tabBar;
++ (void)removeUserDefaults;
 
 @end

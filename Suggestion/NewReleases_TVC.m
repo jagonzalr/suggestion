@@ -14,6 +14,8 @@
 
 #import "SVProgressHUD.h"
 
+static NSString *CellIdentifier = @"newReleaseCell";
+
 @interface NewReleases_TVC ()
 
 @property (nonatomic, strong) NSMutableArray *albums;

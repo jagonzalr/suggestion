@@ -52,6 +52,15 @@ NSString * const whiteColor = @"FEFEFE";
     [[tabBar.items objectAtIndex:3] setTitle:@"Settings"];
 }
 
++ (void)removeUserDefaults
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults removeObjectForKey:@"spotifyAccessToken"];
+    [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
+    [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
+    [userDefaults synchronize];
+}
+
 
 
 @end

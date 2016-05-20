@@ -6,13 +6,19 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
+// Classes
 #import "Artists_TVC.h"
 #import "Artists_TVCell.h"
 #import "Tracks_TVC.h"
+
+// Helpers
 #import "JGSpotify.h"
 #import "JGStyles.h"
 
+// Libraries
 #import "SVProgressHUD.h"
+
+static NSString *CellIdentifier = @"artistCell";
 
 @interface Artists_TVC ()
 
@@ -22,7 +28,7 @@
 
 @implementation Artists_TVC
 
-#pragma mark - Getters && Setters
+#pragma mark - Initialize Variables
 
 - (NSMutableArray *)artists
 {
@@ -47,6 +53,20 @@
 
 
 #pragma mark - Functions
+
+- (void)configureCell:(Artists_TVCell *)cell
+            IndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *artist = [self.artists objectAtIndex:indexPath.row];
+    cell.artistName.text = artist[@"name"];
+    cell.artistName.textColor = [JGStyles textColor];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
+    
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 - (void)configureTableView
 {
@@ -79,29 +99,31 @@
 - (void)loadArtists
 {
     [SVProgressHUD show];
-    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error)
+    {
         if (result) {
-            [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists, NSError *error) {
+            [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists, NSError *error)
+            {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     for (NSDictionary *artist in artists[@"items"]) {
                         [self.tableView beginUpdates];
                         [self.artists addObject:artist];
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.artists count] - 1 inSection:0];
-                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.artists count] - 1
+                                                                    inSection:0];
+                        
+                        [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                        
                         [self.tableView endUpdates];
                     }
                     [SVProgressHUD dismiss];
                 });
             }];
         } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
-            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
-            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
-            [userDefaults synchronize];
-            
             [SVProgressHUD dismiss];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [JGStyles removeUserDefaults];
+            [self dismissViewControllerAnimated:YES
+                                     completion:nil];
         }
     }];
 }
@@ -114,28 +136,26 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
 {
     return [self.artists count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Artists_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"artistCell" forIndexPath:indexPath];
-    NSDictionary *artist = [self.artists objectAtIndex:indexPath.row];
-    cell.artistName.text = artist[@"name"];
-    cell.artistName.textColor = [JGStyles textColor];
+    Artists_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
+                                                           forIndexPath:indexPath];
     
-    UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
-    
-    cell.selectedBackgroundView = cellBackgroundView;
-    cell.backgroundColor = [UIColor clearColor];
+    [self configureCell:cell
+              IndexPath:indexPath];
     
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath
                              animated:YES];
