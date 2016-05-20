@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -18,30 +17,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fdk-gb-cGy">
-                                <rect key="frame" x="150" y="255" width="300" height="90"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g0R-Rp-LOf">
+                                <rect key="frame" x="0.0" y="520" width="600" height="80"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="LR9-Hr-pHP"/>
-                                    <constraint firstAttribute="height" constant="90" id="prM-aH-FFn"/>
+                                    <constraint firstAttribute="height" constant="80" id="oyB-j7-OfN"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="18"/>
-                                <inset key="titleEdgeInsets" minX="75" minY="0.0" maxX="0.0" maxY="65"/>
-                                <state key="normal" title="Log In to" backgroundImage="Login">
-                                    <color key="titleColor" red="0.15686274510000001" green="0.16862745100000001" blue="0.1843137255" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
+                                <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="22"/>
+                                <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                                <state key="normal" title="Log In to Spotify"/>
                                 <connections>
-                                    <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MER-Rs-iHU"/>
+                                    <action selector="login:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GXY-P1-eoh"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Spotify" translatesAutoresizingMaskIntoConstraints="NO" id="X5J-6H-VAE">
+                                <rect key="frame" x="20" y="527" width="65" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="65" id="ZM9-3V-3Ao"/>
+                                    <constraint firstAttribute="height" constant="65" id="l21-Tj-I2D"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Suggestion" translatesAutoresizingMaskIntoConstraints="NO" id="DkD-oV-CcG">
+                                <rect key="frame" x="162" y="28" width="277" height="341"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="277" id="rHa-mL-X4c"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="fdk-gb-cGy" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="4j9-KP-bGw"/>
-                            <constraint firstItem="fdk-gb-cGy" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="9Dp-0t-zzm"/>
+                            <constraint firstItem="g0R-Rp-LOf" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="0Rg-Us-DGE"/>
+                            <constraint firstItem="DkD-oV-CcG" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" symbolic="YES" id="6R8-7E-Bf2"/>
+                            <constraint firstItem="g0R-Rp-LOf" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-20" id="AYU-cQ-0rX"/>
+                            <constraint firstItem="DkD-oV-CcG" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DbP-aj-3sU"/>
+                            <constraint firstAttribute="leadingMargin" secondItem="X5J-6H-VAE" secondAttribute="leading" id="IwR-gZ-O9m"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="X5J-6H-VAE" secondAttribute="trailing" constant="495" id="KXM-3c-Tti"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="X5J-6H-VAE" secondAttribute="bottom" constant="8" id="WBb-rv-jHu"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="g0R-Rp-LOf" secondAttribute="trailing" constant="-20" id="rKs-IR-ngF"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="KXM-3c-Tti"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
-                        <outlet property="logInToSpotifyBtn" destination="fdk-gb-cGy" id="shN-ax-4Q6"/>
+                        <outlet property="spotifyLoginbtn" destination="g0R-Rp-LOf" id="7l3-t8-La0"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -178,7 +198,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="m64-4C-SFb">
                                             <rect key="frame" x="280" y="39" width="41" height="22"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -222,13 +242,13 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="844-WX-G3q">
                                             <rect key="frame" x="280" y="39" width="41" height="22"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jW2-ST-NCU">
                                             <rect key="frame" x="287" y="59" width="27" height="14"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Bold" family="Avenir Next" pointSize="10"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -333,7 +353,7 @@
                                             <rect key="frame" x="15" y="0.0" width="570" height="43"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -374,7 +394,7 @@
                                             <rect key="frame" x="15" y="0.0" width="570" height="43"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -413,12 +433,12 @@
     </scenes>
     <resources>
         <image name="Artist" width="20" height="20"/>
-        <image name="Login" width="787" height="236"/>
         <image name="New" width="20" height="20"/>
         <image name="Play" width="33" height="33"/>
         <image name="Save" width="33" height="33"/>
         <image name="Settings" width="20" height="20"/>
         <image name="Song" width="20" height="20"/>
         <image name="Spotify" width="236" height="236"/>
+        <image name="Suggestion" width="635" height="341"/>
     </resources>
 </document>

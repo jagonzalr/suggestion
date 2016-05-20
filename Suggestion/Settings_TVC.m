@@ -12,6 +12,7 @@
 // Helpers
 #import "JGStyles.h"
 
+// Constants
 static NSString *CellIdentifier = @"settingCell";
 
 @interface Settings_TVC ()
@@ -22,7 +23,7 @@ static NSString *CellIdentifier = @"settingCell";
 
 @implementation Settings_TVC
 
-#pragma mark - Getters && Setters
+#pragma mark - Initialize Variables
 
 - (NSMutableArray *)settings
 {
@@ -44,7 +45,20 @@ static NSString *CellIdentifier = @"settingCell";
     [JGStyles configureTabBar:self.tabBarController.tabBar];
 }
 
+
 #pragma mark - Functions
+
+- (void)configureCell:(UITableViewCell *)cell
+            IndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = self.settings[indexPath.row];
+    cell.textLabel.textColor = [JGStyles textColor];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyDarkColor];
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
+}
 
 - (void)configureTableView
 {
@@ -74,7 +88,8 @@ static NSString *CellIdentifier = @"settingCell";
     self.title = @"Settings".uppercaseString;
 }
 
-#pragma mark - Table view data source
+
+#pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -83,55 +98,39 @@ static NSString *CellIdentifier = @"settingCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    return [self.settings count];
-}
+ numberOfRowsInSection:(NSInteger)section { return self.settings.count; }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"settingCell" forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
+                                                            forIndexPath:indexPath];
     
-    UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [JGStyles greyDarkColor];
-    
-    cell.selectedBackgroundView = cellBackgroundView;
-    cell.backgroundColor = [UIColor clearColor];
-    
-    cell.textLabel.text = [self.settings objectAtIndex:indexPath.row];
-    cell.textLabel.textColor = [JGStyles textColor];
+    [self configureCell:cell
+              IndexPath:indexPath];
     
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath
+                             animated:YES];
     
     if ([self.settings[indexPath.row] isEqualToString:@"Libraries"]) {
-        [self performSegueWithIdentifier:@"showLibraries" sender:nil];
+        [self performSegueWithIdentifier:@"showLibraries"
+                                  sender:nil];
     }
     
     if ([self.settings[indexPath.row] isEqualToString:@"Logout"]) {
-        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-        [userDefaults removeObjectForKey:@"spotifyAccessToken"];
-        [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
-        [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
-        [userDefaults synchronize];
-        
-        NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
-        [NSURLCache setSharedURLCache:sharedCache];
-        
-        for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
-        }
-        
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [JGStyles removeUserDefaults];
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
     }
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 100.0f;
-}
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

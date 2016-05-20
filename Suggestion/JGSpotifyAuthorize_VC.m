@@ -79,8 +79,10 @@
     
     if ([requestUrl isEqualToString:self.callbackUrl.host]) {
         [webView stopLoading];
-        self.completionHandler([request URL], nil);
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:^{
+            self.completionHandler([request URL], nil);
+        }];
+        
         return NO;
     }
     

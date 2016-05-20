@@ -8,13 +8,15 @@
 
 // Classes
 #import "Libraries_TVC.h"
+#import <SafariServices/SafariServices.h>
 
 // Helpers
 #import "JGStyles.h"
 
+// Constants
 static NSString *CellIdentifier = @"libraryCell";
 
-@interface Libraries_TVC ()
+@interface Libraries_TVC () <SFSafariViewControllerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *libraries;
 
@@ -27,11 +29,19 @@ static NSString *CellIdentifier = @"libraryCell";
 - (NSMutableArray *)libraries
 {
     if (!_libraries) {
-        _libraries = [NSMutableArray arrayWithObjects:@"ChameleonFramework", @"SIAlertView", @"SVProgressHUD", nil];
+        _libraries = [NSMutableArray arrayWithObjects:@[@"ChameleonFramework",
+                                                        @"https://github.com/ViccAlexander/Chameleon"],
+                                                      @[@"SIAlertView",
+                                                        @"https://github.com/Sumi-Interactive/SIAlertView"],
+                                                      @[@"SVProgressHUD",
+                                                        @"https://github.com/SVProgressHUD/SVProgressHUD"], nil];
     }
     
     return _libraries;
 }
+
+
+#pragma mark - Initial Configuration
 
 - (void)viewDidLoad
 {
@@ -42,15 +52,16 @@ static NSString *CellIdentifier = @"libraryCell";
 
 #pragma mark - Functions
 
-- (void)configureTableView
+- (void)configureCell:(UITableViewCell *)cell
+            IndexPath:(NSIndexPath *)indexPath
 {
-    if (self.libraries.count > 0) {
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.tableView.backgroundView = nil;
-    } else {
-        self.tableView.backgroundView = [UIView new];
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    }
+    cell.textLabel.text = self.libraries[indexPath.row][0];
+    cell.textLabel.textColor = [JGStyles textColor];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyDarkColor];
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
 }
 
 - (void)customizeUI
@@ -67,84 +78,44 @@ static NSString *CellIdentifier = @"libraryCell";
                                                                             target:nil
                                                                             action:nil];
     
-    self.title = @"Libraries";
+    self.title = @"Libraries".uppercaseString;
 }
 
-#pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
-}
+#pragma mark - UITableView
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView { return 1; }
 
-    return [self.libraries count];
-}
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section { return self.libraries.count; }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
                                                             forIndexPath:indexPath];
     
-    cell.textLabel.text = [self.libraries objectAtIndex:indexPath.row];
-    cell.textLabel.textColor = [JGStyles textColor];
-    
-    UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [JGStyles greyDarkColor];
-    
-    cell.selectedBackgroundView = cellBackgroundView;
-    cell.backgroundColor = [UIColor clearColor];
+    [self configureCell:cell
+              IndexPath:indexPath];
     
     return cell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 100.0f;
+    [tableView deselectRowAtIndexPath:indexPath
+                             animated:YES];
+    
+    NSURL *url = [NSURL URLWithString:self.libraries[indexPath.row][1]];
+    SFSafariViewController *svc = [[SFSafariViewController alloc] initWithURL:url];
+    svc.delegate = self;
+    [self presentViewController:svc
+                       animated:YES
+                     completion:nil];
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

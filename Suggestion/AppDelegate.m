@@ -75,11 +75,11 @@
     [SVProgressHUD setRingNoTextRadius:26.0f];
     [SVProgressHUD setDefaultAnimationType:SVProgressHUDAnimationTypeFlat];
     
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyAccessToken"];
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyAccessTokenExpires"];
-//    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"spotifyRefreshToken"];
-//    [[NSUserDefaults standardUserDefaults] synchronize];
-    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(nonnull NSURL *)url options:(nonnull NSDictionary<NSString *,id> *)options
+{
     return YES;
 }
 
@@ -104,11 +104,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return YES;
 }
 
 @end

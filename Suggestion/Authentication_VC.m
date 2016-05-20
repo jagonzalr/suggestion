@@ -6,64 +6,81 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
+// Classes
 #import "Authentication_VC.h"
-#import "JGSpotify.h"
-#import <QuartzCore/QuartzCore.h>
 
+// Helpers
+#import "JGSpotify.h"
+#import "JGStyles.h"
+
+// Libraries
+#import <QuartzCore/QuartzCore.h>
+#import <SafariServices/SafariServices.h>
 #import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
 #import "SVProgressHUD.h"
 
-@interface Authentication_VC ()
+@interface Authentication_VC () <SFSafariViewControllerDelegate>
 
-@property (weak, nonatomic) IBOutlet UIButton *logInToSpotifyBtn;
+@property (weak, nonatomic) IBOutlet UIButton *spotifyLoginbtn;
 
 @end
 
 @implementation Authentication_VC
 
+#pragma mark - Initial Configuration
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
+    [self customizeUI];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    JGSpotify *spotify = [JGSpotify sharedInstance];
-    
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
-    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
     
     if (accessToken != nil) {
-        NSDate *now = [NSDate date];
-        NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
-        if (distanceBetweenDates < 60) {
-            [SVProgressHUD show];
-            [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
-                if (result) {
-                    [SVProgressHUD dismiss];
-                    [self showTracks];
-                }
-            }];
-        } else {
-            [self showTracks];
-        }
+        [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                            NSError *error)
+        {
+            if (result) {
+                [SVProgressHUD dismiss];
+                [self showTracks];
+            }
+        }];
     }
+}
+
+
+# pragma mark - Functions
+
+- (void)customizeUI
+{
+    self.view.backgroundColor = [JGStyles backgroundColor];
+    self.spotifyLoginbtn.tintColor = [JGStyles whiteColor];
+    self.spotifyLoginbtn.backgroundColor = [JGStyles textColor];
 }
 
 - (void)showTracks
 {
     UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TabBarController"];
-    [self presentViewController:initialNavController animated:YES completion:nil];
+    [self presentViewController:initialNavController
+                       animated:YES
+                     completion:nil];
 }
+
+
+# pragma mark - IBActions
 
 - (IBAction)login:(UIButton *)sender
 {
     JGSpotify *spotify = [JGSpotify sharedInstance];
-    [spotify authorizeWithCompletionHandler:^(BOOL result, NSError *error) {
+    [spotify authorizeWithCompletionHandler:^(BOOL result,
+                                              NSError *error)
+    {
         if (!error) {
             [self showTracks];
         } else {
@@ -72,7 +89,6 @@
             SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                              andMessage:message];
             
-
             [alertView addButtonWithTitle:@"Ok"
                                      type:SIAlertViewButtonTypeCancel
                                   handler:nil];

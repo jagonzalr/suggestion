@@ -59,8 +59,15 @@ NSString * const whiteColor = @"FEFEFE";
     [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
     [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
     [userDefaults synchronize];
+    
+    NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0
+                                                            diskCapacity:0
+                                                                diskPath:nil];
+    [NSURLCache setSharedURLCache:sharedCache];
+    
+    for(NSHTTPCookie *cookie in [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookies]) {
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
 }
-
-
 
 @end

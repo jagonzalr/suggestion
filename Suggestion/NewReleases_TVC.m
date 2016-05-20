@@ -52,17 +52,17 @@ static NSString *CellIdentifier = @"newReleaseCell";
     [JGStyles configureTabBar:self.tabBarController.tabBar];
 }
 
+
 #pragma mark - Functions
 
 - (void)configureCell:(NewReleases_TVCell *)cell
             IndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *album = [self.albums objectAtIndex:indexPath.row];
+    NSDictionary *album = self.albums[indexPath.row];
     
     cell.albumName.text = album[@"name"];
     cell.albumArtist.text = album[@"artists"][0][@"name"];
     cell.albumArtist.text = cell.albumArtist.text.uppercaseString;
-    
     cell.albumName.textColor = [JGStyles textColor];
     cell.albumArtist.textColor = [JGStyles textColor];
     
@@ -125,7 +125,6 @@ static NSString *CellIdentifier = @"newReleaseCell";
                          });
                      }];
                  }
-                 
                  [SVProgressHUD dismiss];
              }];
         } else {
@@ -137,6 +136,7 @@ static NSString *CellIdentifier = @"newReleaseCell";
     }];
 }
 
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -146,10 +146,7 @@ static NSString *CellIdentifier = @"newReleaseCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    return [self.albums count];
-}
+ numberOfRowsInSection:(NSInteger)section { return self.albums.count; }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -174,12 +171,13 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     
     Tracks_TVC *newTracksTVC = [storyboard instantiateViewControllerWithIdentifier:@"TracksViewController"];
     newTracksTVC.isLoadingRecommendations = YES;
-    newTracksTVC.recommendationsParameters = [self.albums objectAtIndex:indexPath.row];
+    newTracksTVC.recommendationsParameters = self.albums[indexPath.row];
     newTracksTVC.isAlbum = YES;
     [self.navigationController pushViewController:newTracksTVC
                                          animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

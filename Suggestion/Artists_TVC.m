@@ -58,7 +58,8 @@ static NSString *CellIdentifier = @"artistCell";
 - (void)configureCell:(Artists_TVCell *)cell
             IndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *artist = [self.artists objectAtIndex:indexPath.row];
+    NSDictionary *artist = self.artists[indexPath.row];
+    
     cell.artistName.text = artist[@"name"];
     cell.artistName.textColor = [JGStyles textColor];
     
@@ -108,7 +109,7 @@ static NSString *CellIdentifier = @"artistCell";
                     for (NSDictionary *artist in artists[@"items"]) {
                         [self.tableView beginUpdates];
                         [self.artists addObject:artist];
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.artists count] - 1
+                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.artists.count - 1
                                                                     inSection:0];
                         
                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
@@ -116,7 +117,6 @@ static NSString *CellIdentifier = @"artistCell";
                         
                         [self.tableView endUpdates];
                     }
-                    
                     [SVProgressHUD dismiss];
                 });
             }];
@@ -129,6 +129,7 @@ static NSString *CellIdentifier = @"artistCell";
     }];
 }
 
+
 #pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -138,10 +139,7 @@ static NSString *CellIdentifier = @"artistCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    return [self.artists count];
-}
+ numberOfRowsInSection:(NSInteger)section { return self.artists.count; }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -166,11 +164,12 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 
     Tracks_TVC *newTracksTVC = [storyboard instantiateViewControllerWithIdentifier:@"TracksViewController"];
     newTracksTVC.isLoadingRecommendations = YES;
-    newTracksTVC.recommendationsParameters = [self.artists objectAtIndex:indexPath.row];
+    newTracksTVC.recommendationsParameters = self.artists[indexPath.row];
     [self.navigationController pushViewController:newTracksTVC
                                          animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
+- (CGFloat)tableView:(UITableView *)tableView
+heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

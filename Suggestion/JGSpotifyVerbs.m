@@ -76,8 +76,6 @@
     
     [urlRequest setHTTPBody:data];
     
-    NSLog(@"%@", payload);
-    
     NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration defaultSessionConfiguration];
     [configuration setAllowsCellularAccess:YES];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
