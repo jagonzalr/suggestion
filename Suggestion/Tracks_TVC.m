@@ -11,7 +11,6 @@
 #import "JGSpotify.h"
 #import "JGStyles.h"
 
-#import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
 #import "SVProgressHUD.h"
 
@@ -52,10 +51,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Songs"];
-    [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Artists"];
-    [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
-    [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+    [JGStyles configureTabBar:self.tabBarController.tabBar];
 }
 
 
@@ -136,7 +132,7 @@
 - (void)loadTopTracks
 {
     [SVProgressHUD show];
-    [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
         if (result) {
             [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
              {
@@ -171,7 +167,7 @@
 - (void)loadRecommendations
 {
     [SVProgressHUD show];
-    [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
         if (result) {
             __block NSString *seedArtistID = @"";
             __block NSString *seedTrackID = @"";
@@ -246,23 +242,6 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         self.isLoadingRecommendations ? [self loadRecommendations] : [self loadTopTracks];
     });
-}
-
-- (void)verifyAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
-{
-    JGSpotify *spotify = [JGSpotify sharedInstance];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
-    
-    NSDate *now = [NSDate date];
-    NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
-    if (distanceBetweenDates < 60) {
-        [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
-            completionHandler(result, nil);
-        }];
-    } else {
-        completionHandler(YES, nil);
-    }
 }
 
 

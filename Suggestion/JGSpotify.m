@@ -267,4 +267,21 @@
     }];
 }
 
++ (void)verifyAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
+{
+    JGSpotify *spotify = [JGSpotify sharedInstance];
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
+    
+    NSDate *now = [NSDate date];
+    NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
+    if (distanceBetweenDates < 60) {
+        [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+            completionHandler(result, nil);
+        }];
+    } else {
+        completionHandler(YES, nil);
+    }
+}
+
 @end

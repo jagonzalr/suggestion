@@ -36,10 +36,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Songs"];
-    [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Artists"];
-    [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
-    [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+    [JGStyles configureTabBar:self.tabBarController.tabBar];
 }
 
 #pragma mark - Functions

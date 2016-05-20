@@ -42,10 +42,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Songs"];
-    [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Artists"];
-    [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
-    [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+    [JGStyles configureTabBar:self.tabBarController.tabBar];
 }
 
 
@@ -82,7 +79,7 @@
 - (void)loadArtists
 {
     [SVProgressHUD show];
-    [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
         if (result) {
             [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -108,24 +105,6 @@
         }
     }];
 }
-
-- (void)verifyAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler
-{
-    JGSpotify *spotify = [JGSpotify sharedInstance];
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSDate *accessTokenExpires = [userDefaults objectForKey:@"spotifyAccessTokenExpires"];
-    
-    NSDate *now = [NSDate date];
-    NSTimeInterval distanceBetweenDates = [accessTokenExpires timeIntervalSinceDate:now];
-    if (distanceBetweenDates < 60) {
-        [spotify refreshTokenWithCompletionHandler:^(BOOL result, NSError *error) {
-            completionHandler(result, nil);
-        }];
-    } else {
-        completionHandler(YES, nil);
-    }
-}
-
 
 #pragma mark - UITableView
 

@@ -38,4 +38,6 @@
 - (void)authorizeWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
 - (void)refreshTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
 
++ (void)verifyAccessTokenWithCompletionHandler:(void(^)(BOOL result, NSError *error))completionHandler;
+
 @end

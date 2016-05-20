@@ -44,6 +44,14 @@ NSString * const whiteColor = @"FEFEFE";
 + (UIFont *)lightFont:(CGFloat)size { return [UIFont fontWithName:kLightFontName size:size]; }
 + (UIFont *)normalFont:(CGFloat)size { return [UIFont fontWithName:kNormalFontName size:size]; }
 
++ (void)configureTabBar:(UITabBar *)tabBar
+{
+    [[tabBar.items objectAtIndex:0] setTitle:@"Songs"];
+    [[tabBar.items objectAtIndex:1] setTitle:@"Artists"];
+    [[tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
+    [[tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+}
+
 
 
 @end
