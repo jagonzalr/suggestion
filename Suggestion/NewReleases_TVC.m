@@ -6,14 +6,19 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
+// Classes
 #import "NewReleases_TVC.h"
 #import "NewReleases_TVCell.h"
 #import "Tracks_TVC.h"
+
+// Helpers
 #import "JGSpotify.h"
 #import "JGStyles.h"
 
+// Libraries 
 #import "SVProgressHUD.h"
 
+// Constants
 static NSString *CellIdentifier = @"newReleaseCell";
 
 @interface NewReleases_TVC ()
@@ -24,7 +29,7 @@ static NSString *CellIdentifier = @"newReleaseCell";
 
 @implementation NewReleases_TVC
 
-#pragma mark - Getters && Setters
+#pragma mark - Initialize Variables
 
 - (NSMutableArray *)albums
 {
@@ -49,6 +54,24 @@ static NSString *CellIdentifier = @"newReleaseCell";
 
 #pragma mark - Functions
 
+- (void)configureCell:(NewReleases_TVCell *)cell
+            IndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *album = [self.albums objectAtIndex:indexPath.row];
+    
+    cell.albumName.text = album[@"name"];
+    cell.albumArtist.text = album[@"artists"][0][@"name"];
+    cell.albumArtist.text = cell.albumArtist.text.uppercaseString;
+    
+    cell.albumName.textColor = [JGStyles textColor];
+    cell.albumArtist.textColor = [JGStyles textColor];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
+}
+
 - (void)configureTableView
 {
     if (self.albums.count > 0) {
@@ -64,8 +87,6 @@ static NSString *CellIdentifier = @"newReleaseCell";
 {
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [JGStyles greyDarkColor];
-    self.tableView.estimatedRowHeight = 150.0f;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.tableFooterView = [UIView new];
     
     self.view.backgroundColor = [JGStyles whiteColor];
@@ -80,12 +101,17 @@ static NSString *CellIdentifier = @"newReleaseCell";
 - (void)loadNewReleases
 {
     [SVProgressHUD show];
-    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                        NSError *error)
+    {
         if (result) {
-            [JGSpotify getNewReleasesCompletionHandler:^(NSDictionary *albums, NSError *error)
+            [JGSpotify getNewReleasesCompletionHandler:^(NSDictionary *albums,
+                                                         NSError *error)
              {
                  for (NSDictionary *album in albums[@"albums"][@"items"]) {
-                     [JGSpotify getAlbum:album[@"id"] WithCompletionHandler:^(NSDictionary *albumData, NSError *error) {
+                     [JGSpotify getAlbum:album[@"id"] WithCompletionHandler:^(NSDictionary *albumData,
+                                                                              NSError *error)
+                     {
                          dispatch_async(dispatch_get_main_queue(), ^{
                              [self.tableView beginUpdates];
                              [self.albums addObject:albumData];
@@ -98,54 +124,47 @@ static NSString *CellIdentifier = @"newReleaseCell";
                              [self.tableView endUpdates];
                          });
                      }];
-                     
                  }
+                 
                  [SVProgressHUD dismiss];
              }];
         } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
-            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
-            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
-            [userDefaults synchronize];
-            
+            [JGStyles removeUserDefaults];
             [SVProgressHUD dismiss];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES
+                                     completion:nil];
         }
     }];
 }
 
 #pragma mark - UITableView
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
     [self configureTableView];
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView
+ numberOfRowsInSection:(NSInteger)section
+{
     return [self.albums count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NewReleases_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"newReleaseCell" forIndexPath:indexPath];
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NewReleases_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
+                                                               forIndexPath:indexPath];
     
-    NSDictionary *album = [self.albums objectAtIndex:indexPath.row];
-    cell.albumName.text = album[@"name"];
-    cell.albumArtist.text = album[@"artists"][0][@"name"];
-    cell.albumArtist.text = cell.albumArtist.text.uppercaseString;
-    cell.albumName.textColor = [JGStyles textColor];
-    cell.albumArtist.textColor = [JGStyles textColor];
-    
-    UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
-    
-    cell.selectedBackgroundView = cellBackgroundView;
-    cell.backgroundColor = [UIColor clearColor];
+    [self configureCell:cell
+              IndexPath:indexPath];
     
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tableView
+didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath
                              animated:YES];
@@ -161,9 +180,6 @@ static NSString *CellIdentifier = @"newReleaseCell";
                                          animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 100.0f;
-}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

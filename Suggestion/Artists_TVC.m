@@ -18,6 +18,7 @@
 // Libraries
 #import "SVProgressHUD.h"
 
+// Constants
 static NSString *CellIdentifier = @"artistCell";
 
 @interface Artists_TVC ()
@@ -63,7 +64,6 @@ static NSString *CellIdentifier = @"artistCell";
     
     UIView *cellBackgroundView = [[UIView alloc] init];
     cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
-    
     cell.selectedBackgroundView = cellBackgroundView;
     cell.backgroundColor = [UIColor clearColor];
 }
@@ -83,8 +83,6 @@ static NSString *CellIdentifier = @"artistCell";
 {
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorColor = [JGStyles greyDarkColor];
-    self.tableView.estimatedRowHeight = 150.0f;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.tableFooterView = [UIView new];
     
     self.view.backgroundColor = [JGStyles whiteColor];
@@ -99,10 +97,12 @@ static NSString *CellIdentifier = @"artistCell";
 - (void)loadArtists
 {
     [SVProgressHUD show];
-    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error)
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                        NSError *error)
     {
         if (result) {
-            [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists, NSError *error)
+            [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists,
+                                                        NSError *error)
             {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     for (NSDictionary *artist in artists[@"items"]) {
@@ -112,10 +112,11 @@ static NSString *CellIdentifier = @"artistCell";
                                                                     inSection:0];
                         
                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                              withRowAnimation:UITableViewRowAnimationAutomatic];
+                                              withRowAnimation:UITableViewRowAnimationFade];
                         
                         [self.tableView endUpdates];
                     }
+                    
                     [SVProgressHUD dismiss];
                 });
             }];
@@ -170,10 +171,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
                                          animated:YES];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 100.0f;
-}
-
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath { return 100.0f; }
 
 @end

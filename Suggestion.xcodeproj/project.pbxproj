@@ -128,6 +128,13 @@
 			name = Tracks;
 			sourceTree = "<group>";
 		};
+		BD14A0461CEF466A002A3D26 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		BD4BDD131CD7F07B00C94FAF = {
 			isa = PBXGroup;
 			children = (
@@ -154,6 +161,7 @@
 				BD0CD1011CEE466500F3AF53 /* Authentication */,
 				BD0CD0FF1CEE464900F3AF53 /* Artists */,
 				BD0CD1001CEE465100F3AF53 /* New Releases */,
+				BD14A0461CEF466A002A3D26 /* Libraries */,
 				BDD2C9CB1CEEAC5A00FE8E90 /* Settings */,
 				BD1426761CE3A285001007A0 /* Tracks */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,

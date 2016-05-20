@@ -104,6 +104,10 @@ static NSString *CellIdentifier = @"settingCell";
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
+    if ([self.settings[indexPath.row] isEqualToString:@"Libraries"]) {
+        [self performSegueWithIdentifier:@"showLibraries" sender:nil];
+    }
+    
     if ([self.settings[indexPath.row] isEqualToString:@"Logout"]) {
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         [userDefaults removeObjectForKey:@"spotifyAccessToken"];

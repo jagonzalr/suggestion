@@ -11,6 +11,5 @@
 @interface Artists_TVCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *artistName;
-@property (weak, nonatomic) IBOutlet UILabel *artistGenre;
 
 @end
