@@ -6,7 +6,10 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
+// Classes
 #import "Settings_TVC.h"
+
+// Helpers
 #import "JGStyles.h"
 
 static NSString *CellIdentifier = @"settingCell";

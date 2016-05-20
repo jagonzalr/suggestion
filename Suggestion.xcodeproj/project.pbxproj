@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		951A9FF955BEBF97DA2EB4D2 /* Pods_Suggestion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */; };
 		BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD1426731CE3A279001007A0 /* Track_TVCell.m */; };
+		BD14A0491CEF46A2002A3D26 /* Libraries_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD14A0481CEF46A2002A3D26 /* Libraries_TVC.m */; };
 		BD4BDD211CD7F07B00C94FAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD201CD7F07B00C94FAF /* main.m */; };
 		BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD231CD7F07B00C94FAF /* AppDelegate.m */; };
 		BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */; };
@@ -33,6 +34,8 @@
 		B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Suggestion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD1426721CE3A279001007A0 /* Track_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track_TVCell.h; sourceTree = "<group>"; };
 		BD1426731CE3A279001007A0 /* Track_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track_TVCell.m; sourceTree = "<group>"; };
+		BD14A0471CEF46A2002A3D26 /* Libraries_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Libraries_TVC.h; sourceTree = "<group>"; };
+		BD14A0481CEF46A2002A3D26 /* Libraries_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Libraries_TVC.m; sourceTree = "<group>"; };
 		BD4BDD1C1CD7F07B00C94FAF /* Suggestion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Suggestion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BD4BDD201CD7F07B00C94FAF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		BD4BDD221CD7F07B00C94FAF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 		BD14A0461CEF466A002A3D26 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				BD14A0471CEF46A2002A3D26 /* Libraries_TVC.h */,
+				BD14A0481CEF46A2002A3D26 /* Libraries_TVC.m */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -354,6 +359,7 @@
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
 				BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */,
 				BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */,
+				BD14A0491CEF46A2002A3D26 /* Libraries_TVC.m in Sources */,
 				BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */,
 				BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */,
 				BDD2C9CE1CEEAC8600FE8E90 /* Settings_TVC.m in Sources */,
