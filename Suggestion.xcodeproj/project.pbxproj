@@ -13,7 +13,6 @@
 		BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD231CD7F07B00C94FAF /* AppDelegate.m */; };
 		BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */; };
 		BD4BDD2A1CD7F07B00C94FAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD4BDD281CD7F07B00C94FAF /* Main.storyboard */; };
-		BD4BDD2D1CD7F07B00C94FAF /* Suggestion.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */; };
 		BD4BDD2F1CD7F07B00C94FAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BD4BDD2E1CD7F07B00C94FAF /* Assets.xcassets */; };
 		BD4BDD321CD7F07B00C94FAF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */; };
 		BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD3A1CD7F1A600C94FAF /* JGSpotify.m */; };
@@ -39,7 +38,6 @@
 		BD4BDD251CD7F07B00C94FAF /* Authentication_VC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Authentication_VC.h; sourceTree = "<group>"; };
 		BD4BDD261CD7F07B00C94FAF /* Authentication_VC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Authentication_VC.m; sourceTree = "<group>"; };
 		BD4BDD291CD7F07B00C94FAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		BD4BDD2C1CD7F07B00C94FAF /* Suggestion.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Suggestion.xcdatamodel; sourceTree = "<group>"; };
 		BD4BDD2E1CD7F07B00C94FAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BD4BDD311CD7F07B00C94FAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BD4BDD331CD7F07B00C94FAF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -152,7 +150,6 @@
 				BD0CD1001CEE465100F3AF53 /* New Releases */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
-				BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,
 			);
 			path = Suggestion;
@@ -321,7 +318,6 @@
 				BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */,
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
 				BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */,
-				BD4BDD2D1CD7F07B00C94FAF /* Suggestion.xcdatamodeld in Sources */,
 				BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */,
 				BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */,
 				BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */,
@@ -483,19 +479,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		BD4BDD2B1CD7F07B00C94FAF /* Suggestion.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				BD4BDD2C1CD7F07B00C94FAF /* Suggestion.xcdatamodel */,
-			);
-			currentVersion = BD4BDD2C1CD7F07B00C94FAF /* Suggestion.xcdatamodel */;
-			path = Suggestion.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = BD4BDD141CD7F07B00C94FAF /* Project object */;
 }
