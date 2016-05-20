@@ -9,6 +9,7 @@
 #import "Tracks_TVC.h"
 #import "Track_TVCell.h"
 #import "JGSpotify.h"
+#import "JGStyles.h"
 
 #import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
@@ -49,6 +50,14 @@
     [self loadTracks];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Songs"];
+    [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Artists"];
+    [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
+    [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+}
+
 
 #pragma mark - Functions
 
@@ -69,15 +78,9 @@
     cell.album.text = [self.tracks objectAtIndex:indexPath.row][@"album"][@"name"];
     cell.album.text = cell.album.text.uppercaseString;
 
-    cell.song.textColor = [UIColor colorWithHexString:@"414141"];
-    cell.artist.textColor = [UIColor colorWithHexString:@"414141"];
-    cell.album.textColor = [UIColor colorWithHexString:@"414141"];
-    
-    UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [UIColor colorWithHexString:@"EDEDED"];
-    
-    cell.selectedBackgroundView = cellBackgroundView;
-    cell.backgroundColor = [UIColor clearColor];
+    cell.song.textColor = [JGStyles textColor];
+    cell.artist.textColor = [JGStyles textColor];
+    cell.album.textColor = [JGStyles textColor];
     
     cell.saveTrackBtn.tag = indexPath.row;
     cell.mediaBtn.tag = indexPath.row;
@@ -94,6 +97,12 @@
     [cell.openInSpotifyBtn addTarget:self
                               action:@selector(openInSpotify:)
                     forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
+    
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
 }
 
 - (void)configureTableView
@@ -110,11 +119,12 @@
 - (void)customizeUI
 {
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorColor = [UIColor colorWithHexString:@"CDCDCD"];
+    self.tableView.separatorColor = [JGStyles greyDarkColor];
     self.tableView.estimatedRowHeight = 150.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.tableFooterView = [UIView new];
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
+    self.view.backgroundColor = [JGStyles whiteColor];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
@@ -153,9 +163,7 @@
             [userDefaults synchronize];
             
             [SVProgressHUD dismiss];
-            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
-            [self presentViewController:initialNavController animated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
     }];
 }
@@ -226,10 +234,9 @@
             [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
             [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
             [userDefaults synchronize];
+            
             [SVProgressHUD dismiss];
-            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
-            [self presentViewController:initialNavController animated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
     }];
 }

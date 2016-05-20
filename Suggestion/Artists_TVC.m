@@ -10,8 +10,8 @@
 #import "Artists_TVCell.h"
 #import "Tracks_TVC.h"
 #import "JGSpotify.h"
+#import "JGStyles.h"
 
-#import <ChameleonFramework/Chameleon.h>
 #import "SVProgressHUD.h"
 
 @interface Artists_TVC ()
@@ -30,12 +30,26 @@
     return _artists;
 }
 
+
+#pragma mark - Initial Configuration
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self customizeUI];
     [self loadArtists];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Songs"];
+    [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Artists"];
+    [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
+    [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+}
+
+
+#pragma mark - Functions
 
 - (void)configureTableView
 {
@@ -51,11 +65,12 @@
 - (void)customizeUI
 {
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorColor = [UIColor colorWithHexString:@"CDCDCD"];
+    self.tableView.separatorColor = [JGStyles greyDarkColor];
     self.tableView.estimatedRowHeight = 150.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.tableFooterView = [UIView new];
     
-    self.view.backgroundColor = [UIColor colorWithHexString:@"FEFEFE"];
+    self.view.backgroundColor = [JGStyles whiteColor];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
@@ -89,9 +104,7 @@
             [userDefaults synchronize];
             
             [SVProgressHUD dismiss];
-            UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
-            [self presentViewController:initialNavController animated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:nil];
         }
     }];
 }
@@ -132,7 +145,13 @@
     Artists_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"artistCell" forIndexPath:indexPath];
     NSDictionary *artist = [self.artists objectAtIndex:indexPath.row];
     cell.artistName.text = artist[@"name"];
-    cell.artistName.textColor = [UIColor colorWithHexString:@"414141"];
+    cell.artistName.textColor = [JGStyles textColor];
+    
+    UIView *cellBackgroundView = [[UIView alloc] init];
+    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
+    
+    cell.selectedBackgroundView = cellBackgroundView;
+    cell.backgroundColor = [UIColor clearColor];
     
     return cell;
 }
@@ -157,48 +176,5 @@
     return 100.0f;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

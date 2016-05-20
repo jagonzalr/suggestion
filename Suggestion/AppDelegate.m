@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 
 #import "JGSpotify.h"
+#import "JGStyles.h"
 
 #import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
@@ -25,16 +26,17 @@
 {
     // Setup UINavigation appearance
     [[UINavigationBar appearance] setTranslucent:NO];
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
-                                                           NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:14.0f]}];
+    [[UINavigationBar appearance] setTintColor:[JGStyles textColor]];
+    [[UINavigationBar appearance] setBarTintColor:[JGStyles backgroundColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[JGStyles textColor],
+                                                           NSFontAttributeName:[JGStyles boldFont:14.0]}];
     
     // Setup UITabBar appearance
-    [[UITabBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
-    [[UITabBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
-    [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
-                                                        NSFontAttributeName:[UIFont fontWithName:@"Avenir Next" size:10.0f]} forState:UIControlStateSelected];
+    [[UITabBar appearance] setTintColor:[JGStyles textColor]];
+    [[UITabBar appearance] setBarTintColor:[JGStyles backgroundColor]];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[JGStyles textColor],
+                                                        NSFontAttributeName:[JGStyles normalFont:10.0]}
+                                             forState:UIControlStateSelected];
     
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"suggestion://oauth"]];
     
@@ -51,22 +53,22 @@
                  AndRedirectUri:@"suggestion://oauth"];
     
     // Setup SIAlertView appearance
-    [[SIAlertView appearance] setTitleFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
-    [[SIAlertView appearance] setMessageFont:[UIFont fontWithName:@"Avenir Next" size:14.0f]];
-    [[SIAlertView appearance] setTitleColor:[UIColor colorWithHexString:@"414141"]];
-    [[SIAlertView appearance] setMessageColor:[UIColor colorWithHexString:@"414141"]];
+    [[SIAlertView appearance] setTitleFont:[JGStyles boldFont:16.0]];
+    [[SIAlertView appearance] setMessageFont:[JGStyles normalFont:14.0]];
+    [[SIAlertView appearance] setTitleColor:[JGStyles textColor]];
+    [[SIAlertView appearance] setMessageColor:[JGStyles textColor]];
     [[SIAlertView appearance] setCornerRadius:4];
     [[SIAlertView appearance] setShadowRadius:50];
-    [[SIAlertView appearance] setViewBackgroundColor:[UIColor colorWithHexString:@"F9F9F9"]];
-    [[SIAlertView appearance] setButtonFont:[UIFont fontWithName:@"AvenirNext-Bold" size:14.0f]];
+    [[SIAlertView appearance] setViewBackgroundColor:[JGStyles backgroundColor]];
+    [[SIAlertView appearance] setButtonFont:[JGStyles boldFont:14.0]];
     [[SIAlertView appearance] setTransitionStyle:SIAlertViewTransitionStyleFade];
     [[SIAlertView appearance] setBackgroundStyle:SIAlertViewBackgroundStyleGradient];
     
     // Setup SVProgressHUD appearance
     [SVProgressHUD setCornerRadius:4.0f];
     [SVProgressHUD setFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
-    [SVProgressHUD setBackgroundColor:[UIColor colorWithHexString:@"1ED760"]];
-    [SVProgressHUD setForegroundColor:[UIColor colorWithHexString:@"FEFEFE"]];
+    [SVProgressHUD setBackgroundColor:[JGStyles greenColor]];
+    [SVProgressHUD setForegroundColor:[JGStyles whiteColor]];
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
     [SVProgressHUD setRingThickness:4.0f];
     [SVProgressHUD setRingRadius:20.0f];
@@ -102,7 +104,6 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation

@@ -22,6 +22,8 @@
 		BDAB73BC1CEE6D5700D7F04D /* Artists_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */; };
 		BDAB73BF1CEE847900D7F04D /* NewReleases_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73BE1CEE847900D7F04D /* NewReleases_TVC.m */; };
 		BDAB73C21CEE8EC500D7F04D /* NewReleases_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73C11CEE8EC500D7F04D /* NewReleases_TVCell.m */; };
+		BDD2C9CE1CEEAC8600FE8E90 /* Settings_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD2C9CD1CEEAC8600FE8E90 /* Settings_TVC.m */; };
+		BDD2C9D11CEEB24800FE8E90 /* JGStyles.m in Sources */ = {isa = PBXBuildFile; fileRef = BDD2C9D01CEEB24800FE8E90 /* JGStyles.m */; };
 		BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +57,10 @@
 		BDAB73BE1CEE847900D7F04D /* NewReleases_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewReleases_TVC.m; sourceTree = "<group>"; };
 		BDAB73C01CEE8EC500D7F04D /* NewReleases_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewReleases_TVCell.h; sourceTree = "<group>"; };
 		BDAB73C11CEE8EC500D7F04D /* NewReleases_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewReleases_TVCell.m; sourceTree = "<group>"; };
+		BDD2C9CC1CEEAC8600FE8E90 /* Settings_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings_TVC.h; sourceTree = "<group>"; };
+		BDD2C9CD1CEEAC8600FE8E90 /* Settings_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings_TVC.m; sourceTree = "<group>"; };
+		BDD2C9CF1CEEB24800FE8E90 /* JGStyles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGStyles.h; sourceTree = "<group>"; };
+		BDD2C9D01CEEB24800FE8E90 /* JGStyles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGStyles.m; sourceTree = "<group>"; };
 		BDF19D8E1CE295A8009B0C0A /* Tracks_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracks_TVC.h; sourceTree = "<group>"; };
 		BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tracks_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,10 +150,12 @@
 			isa = PBXGroup;
 			children = (
 				BDB6A3391CE433DD00C5B1C5 /* JGSpotify */,
+				BDD2C9D21CEEB26C00FE8E90 /* JGStyles */,
 				BD0CD1011CEE466500F3AF53 /* Authentication */,
 				BD0CD0FF1CEE464900F3AF53 /* Artists */,
-				BD1426761CE3A285001007A0 /* Tracks */,
 				BD0CD1001CEE465100F3AF53 /* New Releases */,
+				BDD2C9CB1CEEAC5A00FE8E90 /* Settings */,
+				BD1426761CE3A285001007A0 /* Tracks */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,
@@ -178,6 +186,24 @@
 				BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */,
 			);
 			name = JGSpotify;
+			sourceTree = "<group>";
+		};
+		BDD2C9CB1CEEAC5A00FE8E90 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				BDD2C9CC1CEEAC8600FE8E90 /* Settings_TVC.h */,
+				BDD2C9CD1CEEAC8600FE8E90 /* Settings_TVC.m */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		BDD2C9D21CEEB26C00FE8E90 /* JGStyles */ = {
+			isa = PBXGroup;
+			children = (
+				BDD2C9CF1CEEB24800FE8E90 /* JGStyles.h */,
+				BDD2C9D01CEEB24800FE8E90 /* JGStyles.m */,
+			);
+			name = JGStyles;
 			sourceTree = "<group>";
 		};
 		D61128D483A5D07D0EB2CE46 /* Frameworks */ = {
@@ -315,12 +341,14 @@
 				BDAB73BF1CEE847900D7F04D /* NewReleases_TVC.m in Sources */,
 				BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */,
 				BDAB73C21CEE8EC500D7F04D /* NewReleases_TVCell.m in Sources */,
+				BDD2C9D11CEEB24800FE8E90 /* JGStyles.m in Sources */,
 				BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */,
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
 				BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */,
 				BD4BDD3E1CD804D100C94FAF /* JGSpotifyVerbs.m in Sources */,
 				BD4BDD3B1CD7F1A600C94FAF /* JGSpotify.m in Sources */,
 				BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */,
+				BDD2C9CE1CEEAC8600FE8E90 /* Settings_TVC.m in Sources */,
 				BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
