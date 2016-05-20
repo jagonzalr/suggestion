@@ -67,7 +67,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    self.title = @"New Releases";
+    self.title = @"New Releases".uppercaseString;
 }
 
 - (void)loadNewReleases
@@ -96,6 +96,12 @@
                  [SVProgressHUD dismiss];
              }];
         } else {
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
+            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
+            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
+            [userDefaults synchronize];
+            
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];

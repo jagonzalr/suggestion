@@ -138,12 +138,17 @@
                     Payload:payload
           CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error)
      {
-         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-         [userDefaults setObject:responseObject[@"access_token"] forKey:@"spotifyAccessToken"];
-         [userDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:3500] forKey:@"spotifyAccessTokenExpires"];
-         [userDefaults synchronize];
-         
-         completionHandler(YES, nil);
+         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+         if (httpResponse.statusCode >= 400) {
+             completionHandler(NO, nil);
+         } else {
+             NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+             [userDefaults setObject:responseObject[@"access_token"] forKey:@"spotifyAccessToken"];
+             [userDefaults setObject:[NSDate dateWithTimeIntervalSinceNow:3500] forKey:@"spotifyAccessTokenExpires"];
+             [userDefaults synchronize];
+             
+             completionHandler(YES, nil);
+         }
      }];
 }
 

@@ -120,7 +120,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    self.title = self.isLoadingRecommendations ? @"Recommendations" : @"Songs";
+    self.title = self.isLoadingRecommendations ? @"Recommendations".uppercaseString : @"Songs".uppercaseString;
 }
 
 - (void)loadTopTracks
@@ -146,6 +146,12 @@
                  [SVProgressHUD dismiss];
              }];
         } else {
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
+            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
+            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
+            [userDefaults synchronize];
+            
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
@@ -215,6 +221,11 @@
             }];
             
         } else {
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
+            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
+            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
+            [userDefaults synchronize];
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];

@@ -28,7 +28,7 @@
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"F9F9F9"]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexString:@"414141"],
-                                                           NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]}];
+                                                           NSFontAttributeName:[UIFont fontWithName:@"AvenirNext-Bold" size:14.0f]}];
     
     // Setup UITabBar appearance
     [[UITabBar appearance] setTintColor:[UIColor colorWithHexString:@"414141"]];
@@ -65,7 +65,7 @@
     // Setup SVProgressHUD appearance
     [SVProgressHUD setCornerRadius:4.0f];
     [SVProgressHUD setFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
-    [SVProgressHUD setBackgroundColor:[UIColor colorWithHexString:@"414141"]];
+    [SVProgressHUD setBackgroundColor:[UIColor colorWithHexString:@"1ED760"]];
     [SVProgressHUD setForegroundColor:[UIColor colorWithHexString:@"FEFEFE"]];
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
     [SVProgressHUD setRingThickness:4.0f];

@@ -61,7 +61,7 @@
                                                                             target:nil
                                                                             action:nil];
     
-    self.title = @"Artists";
+    self.title = @"Artists".uppercaseString;
 }
 
 - (void)loadArtists
@@ -81,8 +81,13 @@
                     [SVProgressHUD dismiss];
                 });
             }];
-
         } else {
+            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
+            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
+            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
+            [userDefaults synchronize];
+            
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
