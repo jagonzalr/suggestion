@@ -38,10 +38,7 @@
     return _tracks;
 }
 
-
 #pragma mark - Initial Configuration
-
-
 
 - (void)viewDidLoad
 {
@@ -126,7 +123,7 @@
     self.title = self.isLoadingRecommendations ? @"Recommendations" : @"Songs";
 }
 
-- (void)loadTop
+- (void)loadTopTracks
 {
     [SVProgressHUD show];
     [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
@@ -177,7 +174,11 @@
                 NSMutableArray *trackIDs = [[NSMutableArray alloc] init];
                 int tracksMaxCount = 2;
                 if (!isArtist) {
-                    [trackIDs addObject:[self.recommendationsParameters objectForKey:@"id"]];
+                    if (self.isAlbum) {
+                        [trackIDs addObject:self.recommendationsParameters[@"tracks"][@"items"][0][@"id"]];
+                    } else {
+                        [trackIDs addObject:[self.recommendationsParameters objectForKey:@"id"]];
+                    }
                 }
                 
                 for (NSDictionary *track in tracks[@"tracks"]) {
@@ -225,7 +226,7 @@
 - (void)loadTracks
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        self.isLoadingRecommendations ? [self loadRecommendations] : [self loadTop];
+        self.isLoadingRecommendations ? [self loadRecommendations] : [self loadTopTracks];
     });
 }
 
@@ -252,7 +253,7 @@
 - (void)openInSpotify:(UIButton *)sender
 {
     NSString *title = @"What do you want to do?";
-    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                      andMessage:message];
     
@@ -261,19 +262,14 @@
                           handler:^(SIAlertView *alertView) {
                               NSLog(@"Cancel Clicked");
                           }];
-    [alertView addButtonWithTitle:@""
-                             type:SIAlertViewButtonTypeCancel
-                          handler:^(SIAlertView *alertView) {
-                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
-                          }];
     
     [alertView addButtonWithTitle:@"Yes"
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
-                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
+                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"external_urls"][@"spotify"]]];
                           }];
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]]) {
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"external_urls"][@"spotify"]]]) {
         [alertView show];
     } else {
         NSString *noSpotifyTitle = @"No Spotify";
@@ -284,9 +280,7 @@
         
         [alertView addButtonWithTitle:@"Ok"
                                  type:SIAlertViewButtonTypeCancel
-                              handler:^(SIAlertView *alertView) {
-                                  [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][5]]];
-                              }];
+                              handler:nil];
         [alertView show];
 
     }
@@ -348,7 +342,7 @@
 - (void)saveTrack:(UIButton *)sender
 {
     NSString *title = @"Do you want to save this track?";
-    NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+    NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                      andMessage:message];
     
@@ -360,15 +354,14 @@
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
                               [SVProgressHUD show];
-                              [JGSpotify saveTrack:[self.tracks objectAtIndex:sender.tag][3] WithCompletionHandler:^(id artist, NSError *error) {
+                              [JGSpotify saveTrack:[self.tracks objectAtIndex:sender.tag][@"id"] WithCompletionHandler:^(id artist, NSError *error) {
                                   [SVProgressHUD dismiss];
                                   dispatch_async(dispatch_get_main_queue(), ^{
                                       if (!error) {
                                           NSDictionary *artistInfo = (NSDictionary *)artist;
                                           if ([artistInfo objectForKey:@"error"]) {
-                                              NSLog(@"%@", artist);
                                               NSString *successTitle = @"Error";
-                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
                                               
                                               SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
                                                                                                andMessage:successMessage];
@@ -379,7 +372,7 @@
                                               [alertView show];
                                           } else {
                                               NSString *successTitle = @"Success";
-                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
                                               
                                               SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
                                                                                                andMessage:successMessage];
@@ -392,9 +385,8 @@
                                           
                                           
                                       } else {
-                                          NSLog(@"%@", artist);
                                           NSString *successTitle = @"Error";
-                                          NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][0]];
+                                          NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
                                           
                                           SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
                                                                                            andMessage:successMessage];
@@ -503,5 +495,21 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 }
 
 
+#pragma mark - UITabBar
+
+- (void)tabBarController:(UITabBarController *)tabBarController
+ didSelectViewController:(UIViewController *)viewController
+{
+    NSLog(@"%lu", (unsigned long)tabBarController.selectedIndex);
+    if (tabBarController.selectedIndex == 0) {
+        NSLog(@"showTopSongs");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"showTopSongs" object:nil];
+    }
+    
+    if (tabBarController.selectedIndex == 2) {
+        NSLog(@"showNewReleases");
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"showNewReleases" object:nil];
+    }
+}
 
 @end

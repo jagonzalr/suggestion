@@ -1,45 +1,51 @@
 //
-//  Artists_TVC.m
+//  NewReleases_TVC.m
 //  Suggestion
 //
 //  Created by José Antonio González on 19/05/16.
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
-#import "Artists_TVC.h"
-#import "Artists_TVCell.h"
+#import "NewReleases_TVC.h"
+#import "NewReleases_TVCell.h"
 #import "Tracks_TVC.h"
 #import "JGSpotify.h"
 
 #import <ChameleonFramework/Chameleon.h>
+#import "SIAlertView.h"
 #import "SVProgressHUD.h"
 
-@interface Artists_TVC ()
+@interface NewReleases_TVC ()
 
-@property (nonatomic, strong) NSMutableArray *artists;
+@property (nonatomic, strong) NSMutableArray *albums;
 
 @end
 
-@implementation Artists_TVC
+@implementation NewReleases_TVC
 
 #pragma mark - Getters && Setters
 
-- (NSMutableArray *)artists
+- (NSMutableArray *)albums
 {
-    if (!_artists) _artists = [[NSMutableArray alloc] init];
-    return _artists;
+    if (!_albums) _albums = [[NSMutableArray alloc] init];
+    return _albums;
 }
+
+
+#pragma mark - Initial Configuration
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self customizeUI];
-    [self loadArtists];
+    [self loadNewReleases];
 }
+
+#pragma mark - Functions
 
 - (void)configureTableView
 {
-    if (self.artists.count > 0) {
+    if (self.albums.count > 0) {
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         self.tableView.backgroundView = nil;
     } else {
@@ -61,27 +67,34 @@
                                                                             target:nil
                                                                             action:nil];
     
-    self.title = @"Artists";
+    self.title = @"New Releases";
 }
 
-- (void)loadArtists
+- (void)loadNewReleases
 {
     [SVProgressHUD show];
     [self verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
         if (result) {
-            [JGSpotify getTopArtistsCompletionHandler:^(NSDictionary *artists, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    for (NSDictionary *artist in artists[@"items"]) {
-                        [self.tableView beginUpdates];
-                        [self.artists addObject:artist];
-                        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.artists count] - 1 inSection:0];
-                        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                        [self.tableView endUpdates];
-                    }
-                    [SVProgressHUD dismiss];
-                });
-            }];
-
+            [JGSpotify getNewReleasesCompletionHandler:^(NSDictionary *albums, NSError *error)
+             {
+                 for (NSDictionary *album in albums[@"albums"][@"items"]) {
+                     [JGSpotify getAlbum:album[@"id"] WithCompletionHandler:^(NSDictionary *albumData, NSError *error) {
+                         dispatch_async(dispatch_get_main_queue(), ^{
+                             [self.tableView beginUpdates];
+                             [self.albums addObject:albumData];
+                             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.albums.count - 1
+                                                                         inSection:0];
+                             
+                             [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                   withRowAnimation:UITableViewRowAnimationFade];
+                             
+                             [self.tableView endUpdates];
+                         });
+                     }];
+                     
+                 }
+                 [SVProgressHUD dismiss];
+             }];
         } else {
             [SVProgressHUD dismiss];
             UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
@@ -108,26 +121,26 @@
     }
 }
 
-
 #pragma mark - UITableView
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     [self configureTableView];
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.artists count];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.albums count];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    Artists_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"artistCell" forIndexPath:indexPath];
-    NSDictionary *artist = [self.artists objectAtIndex:indexPath.row];
-    cell.artistName.text = artist[@"name"];
-    cell.artistName.textColor = [UIColor colorWithHexString:@"414141"];
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NewReleases_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"newReleaseCell" forIndexPath:indexPath];
+    
+    NSDictionary *album = [self.albums objectAtIndex:indexPath.row];
+    cell.albumName.text = album[@"name"];
+    cell.albumArtist.text = album[@"artists"][0][@"name"];
+    cell.albumArtist.text = cell.albumArtist.text.uppercaseString;
+    cell.albumName.textColor = [UIColor colorWithHexString:@"414141"];
+    cell.albumArtist.textColor = [UIColor colorWithHexString:@"414141"];
     
     return cell;
 }
@@ -139,10 +152,11 @@
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main"
                                                          bundle:nil];
-
+    
     Tracks_TVC *newTracksTVC = [storyboard instantiateViewControllerWithIdentifier:@"TracksViewController"];
     newTracksTVC.isLoadingRecommendations = YES;
-    newTracksTVC.recommendationsParameters = [self.artists objectAtIndex:indexPath.row];
+    newTracksTVC.recommendationsParameters = [self.albums objectAtIndex:indexPath.row];
+    newTracksTVC.isAlbum = YES;
     [self.navigationController pushViewController:newTracksTVC
                                          animated:YES];
 }

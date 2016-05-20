@@ -27,9 +27,11 @@
 + (JGSpotify *)sharedInstance;
 
 + (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *artist, NSError *error))completionHandler;
++ (void)getAlbum:(NSString *)trackID WithCompletionHandler:(void(^)(NSDictionary *track, NSError *error))completionHandler;
 + (void)getArtistTopTracks:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
 + (void)saveTrack:(NSString *)trackID WithCompletionHandler:(void(^)(id track, NSError *error))completionHandler;
 + (void)getTopArtistsCompletionHandler:(void(^)(NSDictionary *artists, NSError *error))completionHandler;
++ (void)getNewReleasesCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
 + (void)getTopTracksCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler;
 + (void)getRecommendationsWithSeedArtist:(NSString *)seedArtist SeedTrack:(NSString *)seedTrack SeedGenre:(NSString *)seedGenre Popularity:(NSString *)popularity AndCompletionHandler:(void(^)(NSDictionary *recommendations, NSError *error))completionHandler;
 

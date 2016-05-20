@@ -194,11 +194,31 @@
     }];
 }
 
++ (void)getNewReleasesCompletionHandler:(void(^)(NSDictionary *tracks, NSError *error))completionHandler
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+    NSURL *url = [NSURL URLWithString:@"https://api.spotify.com/v1/browse/new-releases?limit=50"];
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        completionHandler(responseObject, error);
+    }];
+}
+
 + (void)getArtist:(NSString *)artistID WithCompletionHandler:(void(^)(NSDictionary *artist, NSError *error))completionHandler
 {
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/artists/%@", artistID]];
+    [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
+        completionHandler(responseObject, error);
+    }];
+}
+
++ (void)getAlbum:(NSString *)albumID WithCompletionHandler:(void(^)(NSDictionary *track, NSError *error))completionHandler;
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"https://api.spotify.com/v1/albums/%@", albumID]];
     [JGSpotifyVerbs JGSpotifyGetVerb:url  AuthorizationCode:accessToken CompletionHandler:^(NSURLResponse *response, id responseObject, NSError *error) {
         completionHandler(responseObject, error);
     }];

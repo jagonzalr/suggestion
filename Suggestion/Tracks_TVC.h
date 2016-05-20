@@ -13,5 +13,6 @@
 
 @property (nonatomic) BOOL isLoadingRecommendations;
 @property (nonatomic, strong) NSDictionary *recommendationsParameters;
+@property (nonatomic) BOOL isAlbum;
 
 @end

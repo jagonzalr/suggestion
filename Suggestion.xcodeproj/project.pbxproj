@@ -21,6 +21,8 @@
 		BD4BDD411CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD4BDD401CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m */; };
 		BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73B81CEE66E200D7F04D /* Artists_TVC.m */; };
 		BDAB73BC1CEE6D5700D7F04D /* Artists_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */; };
+		BDAB73BF1CEE847900D7F04D /* NewReleases_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73BE1CEE847900D7F04D /* NewReleases_TVC.m */; };
+		BDAB73C21CEE8EC500D7F04D /* NewReleases_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BDAB73C11CEE8EC500D7F04D /* NewReleases_TVCell.m */; };
 		BDF19D901CE295A8009B0C0A /* Tracks_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +53,10 @@
 		BDAB73B81CEE66E200D7F04D /* Artists_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Artists_TVC.m; sourceTree = "<group>"; };
 		BDAB73BA1CEE6D5700D7F04D /* Artists_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Artists_TVCell.h; sourceTree = "<group>"; };
 		BDAB73BB1CEE6D5700D7F04D /* Artists_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Artists_TVCell.m; sourceTree = "<group>"; };
+		BDAB73BD1CEE847900D7F04D /* NewReleases_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewReleases_TVC.h; sourceTree = "<group>"; };
+		BDAB73BE1CEE847900D7F04D /* NewReleases_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewReleases_TVC.m; sourceTree = "<group>"; };
+		BDAB73C01CEE8EC500D7F04D /* NewReleases_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewReleases_TVCell.h; sourceTree = "<group>"; };
+		BDAB73C11CEE8EC500D7F04D /* NewReleases_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewReleases_TVCell.m; sourceTree = "<group>"; };
 		BDF19D8E1CE295A8009B0C0A /* Tracks_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracks_TVC.h; sourceTree = "<group>"; };
 		BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tracks_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +96,10 @@
 		BD0CD1001CEE465100F3AF53 /* New Releases */ = {
 			isa = PBXGroup;
 			children = (
+				BDAB73BD1CEE847900D7F04D /* NewReleases_TVC.h */,
+				BDAB73BE1CEE847900D7F04D /* NewReleases_TVC.m */,
+				BDAB73C01CEE8EC500D7F04D /* NewReleases_TVCell.h */,
+				BDAB73C11CEE8EC500D7F04D /* NewReleases_TVCell.m */,
 			);
 			name = "New Releases";
 			sourceTree = "<group>";
@@ -305,7 +315,9 @@
 			files = (
 				BD4BDD411CD80A1200C94FAF /* JGSpotifyAuthorize_VC.m in Sources */,
 				BDAB73BC1CEE6D5700D7F04D /* Artists_TVCell.m in Sources */,
+				BDAB73BF1CEE847900D7F04D /* NewReleases_TVC.m in Sources */,
 				BD4BDD271CD7F07B00C94FAF /* Authentication_VC.m in Sources */,
+				BDAB73C21CEE8EC500D7F04D /* NewReleases_TVCell.m in Sources */,
 				BD4BDD241CD7F07B00C94FAF /* AppDelegate.m in Sources */,
 				BD4BDD211CD7F07B00C94FAF /* main.m in Sources */,
 				BDAB73B91CEE66E200D7F04D /* Artists_TVC.m in Sources */,
