@@ -14,7 +14,6 @@
 #import "JGStyles.h"
 
 // Libraries
-#import <QuartzCore/QuartzCore.h>
 #import <SafariServices/SafariServices.h>
 #import <ChameleonFramework/Chameleon.h>
 #import "SIAlertView.h"
@@ -36,21 +35,27 @@
     [self customizeUI];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//    [super viewDidAppear:animated];
+//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+//    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+//    
+//    if (accessToken != nil) {
+//        [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+//                                                            NSError *error)
+//        {
+//            if (result) {
+//                [SVProgressHUD dismiss];
+//                [self showTracks];
+//            }
+//        }];
+//    }
+//}
+
+- (UIStatusBarStyle)preferredStatusBarStyle
 {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
-    
-    if (accessToken != nil) {
-        [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
-                                                            NSError *error)
-        {
-            if (result) {
-                [SVProgressHUD dismiss];
-                [self showTracks];
-            }
-        }];
-    }
+    return UIStatusBarStyleLightContent;
 }
 
 
@@ -58,15 +63,15 @@
 
 - (void)customizeUI
 {
-    self.view.backgroundColor = [JGStyles backgroundColor];
-    self.spotifyLoginbtn.tintColor = [JGStyles whiteColor];
+    self.view.backgroundColor = [JGStyles textColor];
+    self.spotifyLoginbtn.tintColor = [JGStyles backgroundColor];
     self.spotifyLoginbtn.backgroundColor = [JGStyles textColor];
 }
 
 - (void)showTracks
 {
     UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TabBarController"];
+    UITabBarController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TabBarController"];
     [self presentViewController:initialNavController
                        animated:YES
                      completion:nil];
@@ -85,7 +90,7 @@
             [self showTracks];
         } else {
             NSString *title = @"Error";
-            NSString *message = @"An error occurred. Please try again";
+            NSString *message = @"An error occurred. Please try again.";
             SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                              andMessage:message];
             

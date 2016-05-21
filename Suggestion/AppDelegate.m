@@ -57,23 +57,61 @@
     [[SIAlertView appearance] setMessageFont:[JGStyles normalFont:14.0]];
     [[SIAlertView appearance] setTitleColor:[JGStyles textColor]];
     [[SIAlertView appearance] setMessageColor:[JGStyles textColor]];
-    [[SIAlertView appearance] setCornerRadius:4];
+    [[SIAlertView appearance] setCornerRadius:5];
     [[SIAlertView appearance] setShadowRadius:50];
     [[SIAlertView appearance] setViewBackgroundColor:[JGStyles backgroundColor]];
     [[SIAlertView appearance] setButtonFont:[JGStyles boldFont:14.0]];
     [[SIAlertView appearance] setTransitionStyle:SIAlertViewTransitionStyleFade];
     [[SIAlertView appearance] setBackgroundStyle:SIAlertViewBackgroundStyleGradient];
     
+    [[SIAlertView appearance] setDestructiveButtonColor:[JGStyles whiteColor]];
+    [[SIAlertView appearance] setDestructiveButtonImage:[JGStyles imageFromColor:[JGStyles redColor]]
+                                               forState:UIControlStateNormal];
+    
+    [[SIAlertView appearance] setCancelButtonColor:[JGStyles whiteColor]];
+    [[SIAlertView appearance] setCancelButtonImage:[JGStyles imageFromColor:[JGStyles textColor]]
+                                          forState:UIControlStateNormal];
+    
+    [[SIAlertView appearance] setButtonColor:[JGStyles whiteColor]];
+    [[SIAlertView appearance] setDefaultButtonImage:[JGStyles imageFromColor:[JGStyles greenColor]]
+                                           forState:UIControlStateNormal];
+    
     // Setup SVProgressHUD appearance
     [SVProgressHUD setCornerRadius:4.0f];
     [SVProgressHUD setFont:[UIFont fontWithName:@"AvenirNext-Bold" size:16.0f]];
-    [SVProgressHUD setBackgroundColor:[JGStyles greenColor]];
-    [SVProgressHUD setForegroundColor:[JGStyles whiteColor]];
+    [SVProgressHUD setBackgroundColor:[JGStyles spotifyColor]];
+    [SVProgressHUD setForegroundColor:[JGStyles backgroundColor]];
     [SVProgressHUD setDefaultStyle:SVProgressHUDStyleCustom];
     [SVProgressHUD setRingThickness:4.0f];
     [SVProgressHUD setRingRadius:20.0f];
     [SVProgressHUD setRingNoTextRadius:26.0f];
     [SVProgressHUD setDefaultAnimationType:SVProgressHUDAnimationTypeFlat];
+    
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    NSString *accessToken = [userDefaults objectForKey:@"spotifyAccessToken"];
+    
+    if (accessToken != nil) {
+        [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                            NSError *error)
+         {
+             if (result) {
+                 UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main"
+                                                                bundle:nil];
+                 
+                 UITabBarController *initialNavController = [main instantiateViewControllerWithIdentifier:@"TabBarController"];
+                 self.window.rootViewController = initialNavController;
+             } else {
+                 UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main"
+                                                                bundle:nil];
+                 
+                 UIViewController* rootController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                 self.window.rootViewController = rootController;
+             }
+         }];
+    } else {
+        UIViewController* rootController = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        self.window.rootViewController = rootController;
+    }
     
     return YES;
 }

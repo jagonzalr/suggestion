@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		951A9FF955BEBF97DA2EB4D2 /* Pods_Suggestion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */; };
+		BD0EBB4A1CF0F442003D3230 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD0EBB491CF0F442003D3230 /* QuartzCore.framework */; };
 		BD1426741CE3A279001007A0 /* Track_TVCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BD1426731CE3A279001007A0 /* Track_TVCell.m */; };
 		BD14A0491CEF46A2002A3D26 /* Libraries_TVC.m in Sources */ = {isa = PBXBuildFile; fileRef = BD14A0481CEF46A2002A3D26 /* Libraries_TVC.m */; };
 		BD14A04B1CEF4B5A002A3D26 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD14A04A1CEF4B5A002A3D26 /* SafariServices.framework */; };
@@ -33,6 +34,7 @@
 		3AD8A8617104B3B0F569FA4E /* Pods-Suggestion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Suggestion.release.xcconfig"; path = "Pods/Target Support Files/Pods-Suggestion/Pods-Suggestion.release.xcconfig"; sourceTree = "<group>"; };
 		780DE16A37AEA60E75109A23 /* Pods-Suggestion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Suggestion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Suggestion/Pods-Suggestion.debug.xcconfig"; sourceTree = "<group>"; };
 		B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Suggestion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD0EBB491CF0F442003D3230 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BD1426721CE3A279001007A0 /* Track_TVCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Track_TVCell.h; sourceTree = "<group>"; };
 		BD1426731CE3A279001007A0 /* Track_TVCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Track_TVCell.m; sourceTree = "<group>"; };
 		BD14A0471CEF46A2002A3D26 /* Libraries_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Libraries_TVC.h; sourceTree = "<group>"; };
@@ -66,7 +68,6 @@
 		BDD2C9CD1CEEAC8600FE8E90 /* Settings_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings_TVC.m; sourceTree = "<group>"; };
 		BDD2C9CF1CEEB24800FE8E90 /* JGStyles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGStyles.h; sourceTree = "<group>"; };
 		BDD2C9D01CEEB24800FE8E90 /* JGStyles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGStyles.m; sourceTree = "<group>"; };
-		BDEC5C281CF0DC4D005D084F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		BDF19D8E1CE295A8009B0C0A /* Tracks_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracks_TVC.h; sourceTree = "<group>"; };
 		BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tracks_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -76,6 +77,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD0EBB4A1CF0F442003D3230 /* QuartzCore.framework in Frameworks */,
 				BD14A04B1CEF4B5A002A3D26 /* SafariServices.framework in Frameworks */,
 				951A9FF955BEBF97DA2EB4D2 /* Pods_Suggestion.framework in Frameworks */,
 			);
@@ -173,7 +175,6 @@
 				BD14A0461CEF466A002A3D26 /* Libraries */,
 				BDD2C9CB1CEEAC5A00FE8E90 /* Settings */,
 				BD1426761CE3A285001007A0 /* Tracks */,
-				BDEC5C281CF0DC4D005D084F /* Constants.h */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,
@@ -227,6 +228,7 @@
 		D61128D483A5D07D0EB2CE46 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BD0EBB491CF0F442003D3230 /* QuartzCore.framework */,
 				BD14A04A1CEF4B5A002A3D26 /* SafariServices.framework */,
 				B21BBB298C50A371FB7D971A /* Pods_Suggestion.framework */,
 			);
@@ -482,6 +484,7 @@
 			baseConfigurationReference = 780DE16A37AEA60E75109A23 /* Pods-Suggestion.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = NO;
@@ -501,6 +504,7 @@
 			baseConfigurationReference = 3AD8A8617104B3B0F569FA4E /* Pods-Suggestion.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEFINES_MODULE = NO;

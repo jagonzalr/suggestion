@@ -8,9 +8,13 @@
 
 // Classes
 #import "Settings_TVC.h"
+#import "AppDelegate.h"
 
 // Helpers
 #import "JGStyles.h"
+
+// Libraries
+#import "SIAlertView.h"
 
 // Constants
 static NSString *CellIdentifier = @"settingCell";
@@ -124,9 +128,29 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     }
     
     if ([self.settings[indexPath.row] isEqualToString:@"Logout"]) {
-        [JGStyles removeUserDefaults];
-        [self dismissViewControllerAnimated:YES
-                                 completion:nil];
+        NSString *title = @"Closing session";
+        NSString *message = @"Are you sure you want to close your current session?";
+        
+        SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
+                                                         andMessage:message];
+        
+        [alertView addButtonWithTitle:@"No"
+                                 type:SIAlertViewButtonTypeDestructive
+                              handler:nil];
+        
+        [alertView addButtonWithTitle:@"Yes"
+                                 type:SIAlertViewButtonTypeDefault
+                              handler:^(SIAlertView *alertView) {
+                                  [JGStyles removeUserDefaults];
+                                  UIStoryboard *main = [UIStoryboard storyboardWithName:@"Main"
+                                                                                  bundle:nil];
+                                  
+                                  UIViewController* rootController = [main instantiateViewControllerWithIdentifier:@"LoginViewController"];
+                                  AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+                                  appDelegate.window.rootViewController = rootController;
+                              }];
+        
+        [alertView show];
     }
 }
 

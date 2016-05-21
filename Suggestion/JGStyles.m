@@ -13,12 +13,14 @@ NSString * const kBoldFontName = @"AvenirNext-Bold";
 NSString * const kLightFontName = @"AvenirNext-Light";
 NSString * const kNormalFontName = @"Avenir Next";
 
-NSString * const backgroundColor = @"F9F9F9";
-NSString * const greenColor = @"1ED760";
-NSString * const greyDarkColor = @"CDCDCD";
-NSString * const greyLightColor = @"EDEDED";
-NSString * const textColor = @"414141";
-NSString * const whiteColor = @"FEFEFE";
+NSString * const kBackgroundColor = @"F9F9F9";
+NSString * const kGreenColor = @"46B787";
+NSString * const kGreyDarkColor = @"CDCDCD";
+NSString * const kGreyLightColor = @"EDEDED";
+NSString * const kRedColor = @"F6504D";
+NSString * const kSpotifyColor = @"1ED760";
+NSString * const kTextColor = @"414141";
+NSString * const kWhiteColor = @"FEFEFE";
 
 @implementation JGStyles
 
@@ -33,12 +35,14 @@ NSString * const whiteColor = @"FEFEFE";
     return _sharedStyles;
 }
 
-+ (UIColor *)backgroundColor { return [UIColor colorWithHexString:backgroundColor]; }
-+ (UIColor *)greenColor { return [UIColor colorWithHexString:greenColor]; }
-+ (UIColor *)greyDarkColor { return [UIColor colorWithHexString:greyDarkColor]; }
-+ (UIColor *)greyLightColor { return [UIColor colorWithHexString:greyLightColor]; }
-+ (UIColor *)textColor { return [UIColor colorWithHexString:textColor]; }
-+ (UIColor *)whiteColor { return [UIColor colorWithHexString:whiteColor]; }
++ (UIColor *)backgroundColor { return [UIColor colorWithHexString:kBackgroundColor]; }
++ (UIColor *)greenColor { return [UIColor colorWithHexString:kGreenColor]; }
++ (UIColor *)greyDarkColor { return [UIColor colorWithHexString:kGreyDarkColor]; }
++ (UIColor *)greyLightColor { return [UIColor colorWithHexString:kGreyLightColor]; }
++ (UIColor *)redColor { return [UIColor colorWithHexString:kRedColor]; }
++ (UIColor *)spotifyColor { return [UIColor colorWithHexString:kSpotifyColor]; }
++ (UIColor *)textColor { return [UIColor colorWithHexString:kTextColor]; }
++ (UIColor *)whiteColor { return [UIColor colorWithHexString:kWhiteColor]; }
 
 + (UIFont *)boldFont:(CGFloat)size { return [UIFont fontWithName:kBoldFontName size:size]; }
 + (UIFont *)lightFont:(CGFloat)size { return [UIFont fontWithName:kLightFontName size:size]; }
@@ -50,6 +54,34 @@ NSString * const whiteColor = @"FEFEFE";
     [[tabBar.items objectAtIndex:1] setTitle:@"Artists"];
     [[tabBar.items objectAtIndex:2] setTitle:@"New Releases"];
     [[tabBar.items objectAtIndex:3] setTitle:@"Settings"];
+}
+
++ (UIImage *)imageFromColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0, 0, 1, 1);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
++ (UIImage *)roundedImage:(UIImage *)image WithRadius:(NSInteger)radius
+{
+    CALayer *imageLayer = [CALayer layer];
+    imageLayer.frame = CGRectMake(0, 0, image.size.width, image.size.height);
+    imageLayer.contents = (id) image.CGImage;
+    
+    imageLayer.masksToBounds = YES;
+    imageLayer.cornerRadius = radius;
+    
+    UIGraphicsBeginImageContext(image.size);
+    [imageLayer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *roundedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return roundedImage;
 }
 
 + (void)removeUserDefaults

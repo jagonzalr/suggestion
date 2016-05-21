@@ -62,6 +62,7 @@
 {
     [self.activityIndicator stopAnimating];
     self.title = [self.spotifyAuthorizeWebview stringByEvaluatingJavaScriptFromString:@"document.title"];
+    self.title = self.title.uppercaseString;
 }
 
 - (void)webView:(UIWebView *)wv didFailLoadWithError:(NSError *)error {

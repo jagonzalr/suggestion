@@ -17,6 +17,8 @@ extern NSString * const kBackgroundColor;
 extern NSString * const kGreenColor;
 extern NSString * const kGreyDarkColor;
 extern NSString * const kGreyLightColor;
+extern NSString * const kRedColor;
+extern NSString * const kSpotifyColor;
 extern NSString * const kTextColor;
 extern NSString * const kWhiteColor;
 
@@ -29,6 +31,8 @@ extern NSString * const kWhiteColor;
 + (UIColor *)greenColor;
 + (UIColor *)greyDarkColor;
 + (UIColor *)greyLightColor;
++ (UIColor *)redColor;
++ (UIColor *)spotifyColor;
 + (UIColor *)textColor;
 + (UIColor *)whiteColor;
 
@@ -37,6 +41,8 @@ extern NSString * const kWhiteColor;
 + (UIFont *)normalFont:(CGFloat)size;
 
 + (void)configureTabBar:(UITabBar *)tabBar;
++ (UIImage *)imageFromColor:(UIColor *)color;
++ (UIImage *)roundedImage:(UIImage *)image WithRadius:(NSInteger)radius;
 + (void)removeUserDefaults;
 
 @end

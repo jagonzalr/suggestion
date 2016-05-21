@@ -302,10 +302,8 @@ static NSString *CellIdentifier = @"trackCell";
                           handler:nil];
     
     [alertView addButtonWithTitle:@"Yes"
-                             type:SIAlertViewButtonTypeCancel
+                             type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView) {
-                              
-                              
                               [[UIApplication sharedApplication] openURL:spotifyUrl];
                           }];
     
@@ -374,7 +372,7 @@ static NSString *CellIdentifier = @"trackCell";
                           handler:nil];
     
     [alertView addButtonWithTitle:@"Yes"
-                             type:SIAlertViewButtonTypeCancel
+                             type:SIAlertViewButtonTypeDefault
                           handler:^(SIAlertView *alertView)
     {
         [SVProgressHUD show];
@@ -396,7 +394,7 @@ static NSString *CellIdentifier = @"trackCell";
                                                                           andMessage:successMessage];
                          
                          [alertView addButtonWithTitle:@"Ok"
-                                                  type:SIAlertViewButtonTypeDestructive
+                                                  type:SIAlertViewButtonTypeCancel
                                                handler:nil];
                          [alertView show];
                      } else {
@@ -423,7 +421,7 @@ static NSString *CellIdentifier = @"trackCell";
                                                                       andMessage:successMessage];
                      
                      [alertView addButtonWithTitle:@"Ok"
-                                              type:SIAlertViewButtonTypeDestructive
+                                              type:SIAlertViewButtonTypeCancel
                                            handler:nil];
                      [alertView show];
                  }
