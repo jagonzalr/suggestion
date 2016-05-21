@@ -66,6 +66,7 @@
 		BDD2C9CD1CEEAC8600FE8E90 /* Settings_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings_TVC.m; sourceTree = "<group>"; };
 		BDD2C9CF1CEEB24800FE8E90 /* JGStyles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGStyles.h; sourceTree = "<group>"; };
 		BDD2C9D01CEEB24800FE8E90 /* JGStyles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGStyles.m; sourceTree = "<group>"; };
+		BDEC5C281CF0DC4D005D084F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		BDF19D8E1CE295A8009B0C0A /* Tracks_TVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tracks_TVC.h; sourceTree = "<group>"; };
 		BDF19D8F1CE295A8009B0C0A /* Tracks_TVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tracks_TVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -172,6 +173,7 @@
 				BD14A0461CEF466A002A3D26 /* Libraries */,
 				BDD2C9CB1CEEAC5A00FE8E90 /* Settings */,
 				BD1426761CE3A285001007A0 /* Tracks */,
+				BDEC5C281CF0DC4D005D084F /* Constants.h */,
 				BD4BDD281CD7F07B00C94FAF /* Main.storyboard */,
 				BD4BDD301CD7F07B00C94FAF /* LaunchScreen.storyboard */,
 				BD4BDD1F1CD7F07B00C94FAF /* Supporting Files */,

@@ -6,14 +6,19 @@
 //  Copyright © 2016 Jose Antonio Gonzalez. All rights reserved.
 //
 
+// Classes
 #import "Tracks_TVC.h"
 #import "Track_TVCell.h"
+
+// Helpers
 #import "JGSpotify.h"
 #import "JGStyles.h"
 
+// Libraries
 #import "SIAlertView.h"
 #import "SVProgressHUD.h"
 
+// Constants
 static NSString *CellIdentifier = @"trackCell";
 
 @interface Tracks_TVC ()
@@ -21,13 +26,14 @@ static NSString *CellIdentifier = @"trackCell";
 @property (nonatomic) BOOL isPlaying;
 @property (nonatomic, strong) AVPlayer *player;
 @property (nonatomic, strong) AVAudioSession *session;
+@property (nonatomic) NSInteger tagPlaying;
 @property (nonatomic, strong) NSMutableArray *tracks;
 
 @end
 
 @implementation Tracks_TVC
 
-#pragma mark - Getters && Setters
+#pragma mark - Initialize Variables
 
 - (AVAudioSession *)session
 {
@@ -40,6 +46,7 @@ static NSString *CellIdentifier = @"trackCell";
     return _tracks;
 }
 
+
 #pragma mark - Initial Configuration
 
 - (void)viewDidLoad
@@ -49,6 +56,8 @@ static NSString *CellIdentifier = @"trackCell";
     [self configureAVSession];
     [self customizeUI];
     [self loadTracks];
+    
+    self.tagPlaying = -1;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -62,19 +71,23 @@ static NSString *CellIdentifier = @"trackCell";
 - (void)configureAVSession
 {
     NSError *error;
-    [self.session setCategory:AVAudioSessionCategoryPlayback error:&error];
-    if (error) {
-        NSLog(@"Error setting up audio session category: %@", error.localizedDescription);
-    }
+    [self.session setCategory:AVAudioSessionCategoryPlayback
+                        error:&error];
 }
 
-- (void)configureCell:(Track_TVCell *)cell IndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(Track_TVCell *)cell
+            IndexPath:(NSIndexPath *)indexPath
 {
-    cell.song.text = [self.tracks objectAtIndex:indexPath.row][@"name"];
-    cell.artist.text = [self.tracks objectAtIndex:indexPath.row][@"artists"][0][@"name"];
-    cell.artist.text = cell.artist.text.uppercaseString;
-    cell.album.text = [self.tracks objectAtIndex:indexPath.row][@"album"][@"name"];
-    cell.album.text = cell.album.text.uppercaseString;
+    NSString *song = self.tracks[indexPath.row][@"name"];
+    song = [song substringToIndex:MIN(35, [song length])];
+    NSString *artist = self.tracks[indexPath.row][@"artists"][0][@"name"];
+    artist = [artist substringToIndex:MIN(50, [artist length])].uppercaseString;
+    NSString *album = self.tracks[indexPath.row][@"album"][@"name"];
+    album = album.uppercaseString;
+    
+    cell.song.text = song;
+    cell.artist.text = artist;
+    cell.album.text = album;
 
     cell.song.textColor = [JGStyles textColor];
     cell.artist.textColor = [JGStyles textColor];
@@ -88,17 +101,36 @@ static NSString *CellIdentifier = @"trackCell";
                           action:@selector(saveTrack:)
                 forControlEvents:UIControlEventTouchUpInside];
     
-    [cell.mediaBtn addTarget:self
-                      action:@selector(playPreview:)
-            forControlEvents:UIControlEventTouchUpInside];
-    
     [cell.openInSpotifyBtn addTarget:self
                               action:@selector(openInSpotify:)
                     forControlEvents:UIControlEventTouchUpInside];
     
+    [cell.mediaBtn removeTarget:nil
+                         action:NULL
+               forControlEvents:UIControlEventTouchUpInside];
+    
+    if (self.tagPlaying == indexPath.row) {
+        [cell.mediaBtn addTarget:self
+                          action:@selector(stopPreview:)
+                forControlEvents:UIControlEventTouchUpInside];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [cell.mediaBtn setImage:[UIImage imageNamed:@"Stop"]
+                           forState:UIControlStateNormal];
+        });
+    } else {
+        [cell.mediaBtn addTarget:self
+                          action:@selector(playPreview:)
+                forControlEvents:UIControlEventTouchUpInside];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
+                           forState:UIControlStateNormal];
+        });
+    }
+    
     UIView *cellBackgroundView = [[UIView alloc] init];
     cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
-    
     cell.selectedBackgroundView = cellBackgroundView;
     cell.backgroundColor = [UIColor clearColor];
 }
@@ -131,65 +163,35 @@ static NSString *CellIdentifier = @"trackCell";
     self.title = self.isLoadingRecommendations ? @"Recommendations".uppercaseString : @"Songs".uppercaseString;
 }
 
-- (void)loadTopTracks
-{
-    [SVProgressHUD show];
-    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
-        if (result) {
-            [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks, NSError *error)
-             {
-                 dispatch_async(dispatch_get_main_queue(), ^{
-                     for (NSDictionary *track in tracks[@"items"]) {
-                         [self.tableView beginUpdates];
-                         [self.tracks addObject:track];
-                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
-                                                                     inSection:0];
-                         
-                         [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                                               withRowAnimation:UITableViewRowAnimationFade];
-                         
-                         [self.tableView endUpdates];
-                     }
-                 });
-                 [SVProgressHUD dismiss];
-             }];
-        } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
-            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
-            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
-            [userDefaults synchronize];
-            
-            [SVProgressHUD dismiss];
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }];
-}
-
 - (void)loadRecommendations
 {
     [SVProgressHUD show];
-    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result, NSError *error) {
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                        NSError *error)
+    {
         if (result) {
             __block NSString *seedArtistID = @"";
             __block NSString *seedTrackID = @"";
             __block NSString *seedGenreID = @"";
-            __block BOOL isArtist = [self.recommendationsParameters objectForKey:@"genres"] ? YES : NO;
+            __block BOOL isArtist = self.recommendationsParameters[@"genres"] ? YES : NO;
             
-            if ([self.recommendationsParameters objectForKey:@"artists"]) {
-                seedArtistID = [self.recommendationsParameters objectForKey:@"artists"][0][@"id"];
+            if (self.recommendationsParameters[@"artists"]) {
+                seedArtistID = self.recommendationsParameters[@"artists"][0][@"id"];
             } else {
-                seedArtistID = [self.recommendationsParameters objectForKey:@"id"];
+                seedArtistID = self.recommendationsParameters[@"id"];
             }
             
-            [JGSpotify getArtistTopTracks:seedArtistID WithCompletionHandler:^(NSDictionary *tracks, NSError *error) {
+            [JGSpotify getArtistTopTracks:seedArtistID
+                    WithCompletionHandler:^(NSDictionary *tracks,
+                                            NSError *error)
+            {
                 NSMutableArray *trackIDs = [[NSMutableArray alloc] init];
                 int tracksMaxCount = 2;
                 if (!isArtist) {
                     if (self.isAlbum) {
                         [trackIDs addObject:self.recommendationsParameters[@"tracks"][@"items"][0][@"id"]];
                     } else {
-                        [trackIDs addObject:[self.recommendationsParameters objectForKey:@"id"]];
+                        [trackIDs addObject:self.recommendationsParameters[@"id"]];
                     }
                 }
                 
@@ -207,7 +209,8 @@ static NSString *CellIdentifier = @"trackCell";
                                                   SeedTrack:seedTrackID
                                                   SeedGenre:seedGenreID
                                                  Popularity:@"50"
-                                       AndCompletionHandler:^(NSDictionary *recommendations, NSError *error)
+                                       AndCompletionHandler:^(NSDictionary *recommendations,
+                                                              NSError *error)
                  {
                      dispatch_async(dispatch_get_main_queue(), ^{
                          for (NSDictionary *recommendation in recommendations[@"tracks"]) {
@@ -225,18 +228,47 @@ static NSString *CellIdentifier = @"trackCell";
                      });
                  }];
             }];
-            
         } else {
-            NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-            [userDefaults removeObjectForKey:@"spotifyAccessToken"];
-            [userDefaults removeObjectForKey:@"spotifyAccessTokenExpires"];
-            [userDefaults removeObjectForKey:@"spotifyRefreshToken"];
-            [userDefaults synchronize];
-            
             [SVProgressHUD dismiss];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [JGStyles removeUserDefaults];
+            [self dismissViewControllerAnimated:YES
+                                     completion:nil];
         }
     }];
+}
+
+- (void)loadTopTracks
+{
+    [SVProgressHUD show];
+    [JGSpotify verifyAccessTokenWithCompletionHandler:^(BOOL result,
+                                                        NSError *error)
+     {
+         if (result) {
+             [JGSpotify getTopTracksCompletionHandler:^(NSDictionary *tracks,
+                                                        NSError *error)
+              {
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                      for (NSDictionary *track in tracks[@"items"]) {
+                          [self.tableView beginUpdates];
+                          [self.tracks addObject:track];
+                          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.tracks.count - 1
+                                                                      inSection:0];
+                          
+                          [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                                                withRowAnimation:UITableViewRowAnimationFade];
+                          
+                          [self.tableView endUpdates];
+                      }
+                  });
+                  [SVProgressHUD dismiss];
+              }];
+         } else {
+             [SVProgressHUD dismiss];
+             [JGStyles removeUserDefaults];
+             [self dismissViewControllerAnimated:YES
+                                      completion:nil];
+         }
+     }];
 }
 
 - (void)loadTracks
@@ -246,29 +278,39 @@ static NSString *CellIdentifier = @"trackCell";
     });
 }
 
+- (void)restoreMedia:(NSIndexPath *)indexPath
+{
+    Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    [self configureCell:cell IndexPath:indexPath];
+}
+
 
 #pragma mark - Selectors
 
 - (void)openInSpotify:(UIButton *)sender
 {
+    NSURL *spotifyUrl = [NSURL URLWithString:self.tracks[sender.tag][@"external_urls"][@"spotify"]];
     NSString *title = @"What do you want to do?";
-    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
+    NSString *message = [NSString stringWithFormat:@"The track %@ will open in Spotify.",
+                                                   self.tracks[sender.tag][@"name"]];
+    
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                      andMessage:message];
     
     [alertView addButtonWithTitle:@"No"
                              type:SIAlertViewButtonTypeDestructive
-                          handler:^(SIAlertView *alertView) {
-                              NSLog(@"Cancel Clicked");
-                          }];
+                          handler:nil];
     
     [alertView addButtonWithTitle:@"Yes"
                              type:SIAlertViewButtonTypeCancel
                           handler:^(SIAlertView *alertView) {
-                              [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"external_urls"][@"spotify"]]];
+                              
+                              
+                              [[UIApplication sharedApplication] openURL:spotifyUrl];
                           }];
     
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"external_urls"][@"spotify"]]]) {
+    
+    if ([[UIApplication sharedApplication] canOpenURL:spotifyUrl]) {
         [alertView show];
     } else {
         NSString *noSpotifyTitle = @"No Spotify";
@@ -281,47 +323,28 @@ static NSString *CellIdentifier = @"trackCell";
                                  type:SIAlertViewButtonTypeCancel
                               handler:nil];
         [alertView show];
-
     }
 }
 
 - (void)playPreview:(UIButton *)sender
 {
-    for (int i = 0; i < self.tracks.count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
-                       forState:UIControlStateNormal];
-        
-        [cell.mediaBtn removeTarget:nil
-                             action:NULL
-                   forControlEvents:UIControlEventTouchUpInside];
-        
-        [cell.mediaBtn addTarget:self
-                          action:@selector(playPreview:)
-                forControlEvents:UIControlEventTouchUpInside];
-    }
-    
     if (self.isPlaying) {
         [self.player pause];
         self.player = nil;
     }
     
     
+    if (self.tagPlaying != -1) {
+         NSIndexPath *currentIndexPath = [NSIndexPath indexPathForRow:self.tagPlaying inSection:0];
+        self.tagPlaying = sender.tag;
+        [self restoreMedia:currentIndexPath];
+    }
+   
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag
                                                 inSection:0];
     
-    Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    [cell.mediaBtn setImage:[UIImage imageNamed:@"Stop"]
-                   forState:UIControlStateNormal];
-    
-    [cell.mediaBtn removeTarget:nil
-                         action:NULL
-               forControlEvents:UIControlEventTouchUpInside];
-    
-    [cell.mediaBtn addTarget:self
-                      action:@selector(stopPreview:)
-            forControlEvents:UIControlEventTouchUpInside];
+    self.tagPlaying = sender.tag;
+    [self restoreMedia:indexPath];
     
     NSURL *url = [NSURL URLWithString:[self.tracks objectAtIndex:sender.tag][@"preview_url"]];
     AVPlayerItem* playerItem = [AVPlayerItem playerItemWithURL:url];
@@ -329,7 +352,7 @@ static NSString *CellIdentifier = @"trackCell";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(trackDidFinishPlaying:)
                                                  name:AVPlayerItemDidPlayToEndTimeNotification
-                                               object:playerItem];
+                                               object:indexPath];
     
     self.player = [[AVPlayer alloc] initWithPlayerItem:playerItem];
     self.player.actionAtItemEnd = AVPlayerActionAtItemEndNone;
@@ -337,11 +360,12 @@ static NSString *CellIdentifier = @"trackCell";
     [self.player play];
 }
 
-
 - (void)saveTrack:(UIButton *)sender
 {
     NSString *title = @"Do you want to save this track?";
-    NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
+    NSString *message = [NSString stringWithFormat:@"The track %@ will be save in 'Your Music' library in Spotify.",
+                                                   self.tracks[sender.tag][@"name"]];
+    
     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:title
                                                      andMessage:message];
     
@@ -351,107 +375,90 @@ static NSString *CellIdentifier = @"trackCell";
     
     [alertView addButtonWithTitle:@"Yes"
                              type:SIAlertViewButtonTypeCancel
-                          handler:^(SIAlertView *alertView) {
-                              [SVProgressHUD show];
-                              [JGSpotify saveTrack:[self.tracks objectAtIndex:sender.tag][@"id"] WithCompletionHandler:^(id artist, NSError *error) {
-                                  [SVProgressHUD dismiss];
-                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                      if (!error) {
-                                          NSDictionary *artistInfo = (NSDictionary *)artist;
-                                          if ([artistInfo objectForKey:@"error"]) {
-                                              NSString *successTitle = @"Error";
-                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
-                                              
-                                              SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
-                                                                                               andMessage:successMessage];
-                                              
-                                              [alertView addButtonWithTitle:@"Ok"
-                                                                       type:SIAlertViewButtonTypeDestructive
-                                                                    handler:nil];
-                                              [alertView show];
-                                          } else {
-                                              NSString *successTitle = @"Success";
-                                              NSString *successMessage = [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
-                                              
-                                              SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
-                                                                                               andMessage:successMessage];
-                                              
-                                              [alertView addButtonWithTitle:@"Ok"
-                                                                       type:SIAlertViewButtonTypeCancel
-                                                                    handler:nil];
-                                              [alertView show];
-                                          }
-                                          
-                                          
-                                      } else {
-                                          NSString *successTitle = @"Error";
-                                          NSString *successMessage = [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.", [self.tracks objectAtIndex:sender.tag][@"name"]];
-                                          
-                                          SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
-                                                                                           andMessage:successMessage];
-                                          
-                                          [alertView addButtonWithTitle:@"Ok"
-                                                                   type:SIAlertViewButtonTypeDestructive
-                                                                handler:nil];
-                                          [alertView show];
-                                      }
-                                  });
-                                  
-                              }];
-                          }];
+                          handler:^(SIAlertView *alertView)
+    {
+        [SVProgressHUD show];
+        [JGSpotify saveTrack:self.tracks[sender.tag][@"id"]
+       WithCompletionHandler:^(id artist,
+                               NSError *error)
+         {
+             [SVProgressHUD dismiss];
+             dispatch_async(dispatch_get_main_queue(), ^{
+                 if (!error) {
+                     NSDictionary *artistInfo = (NSDictionary *)artist;
+                     if ([artistInfo objectForKey:@"error"]) {
+                         NSString *successTitle = @"Error";
+                         NSString *successMessage =
+                         [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.",
+                                                    self.tracks[sender.tag][@"name"]];
+                         
+                         SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                          andMessage:successMessage];
+                         
+                         [alertView addButtonWithTitle:@"Ok"
+                                                  type:SIAlertViewButtonTypeDestructive
+                                               handler:nil];
+                         [alertView show];
+                     } else {
+                         NSString *successTitle = @"Success";
+                         NSString *successMessage =
+                         [NSString stringWithFormat:@"The track %@ has been saved in 'Your Music' library in Spotify.",
+                                                    self.tracks[sender.tag][@"name"]];
+                         
+                         SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                          andMessage:successMessage];
+                         
+                         [alertView addButtonWithTitle:@"Ok"
+                                                  type:SIAlertViewButtonTypeCancel
+                                               handler:nil];
+                         [alertView show];
+                     }
+                 } else {
+                     NSString *successTitle = @"Error";
+                     NSString *successMessage =
+                     [NSString stringWithFormat:@"The track %@ couldn't been saved in 'Your Music' library in Spotify.",
+                                                self.tracks[sender.tag][@"name"]];
+                     
+                     SIAlertView *alertView = [[SIAlertView alloc] initWithTitle:successTitle
+                                                                      andMessage:successMessage];
+                     
+                     [alertView addButtonWithTitle:@"Ok"
+                                              type:SIAlertViewButtonTypeDestructive
+                                           handler:nil];
+                     [alertView show];
+                 }
+             });
+         }];
+    }];
     
     [alertView show];
 }
 
 - (void)stopPreview:(UIButton *)sender
 {
-    for (int i = 0; i < self.tracks.count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn removeTarget:nil
-                             action:NULL
-                   forControlEvents:UIControlEventTouchUpInside];
-        
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
-                       forState:UIControlStateNormal];
-    }
-    
+    self.tagPlaying = -1;
     [self.player pause];
     self.player = nil;
-    self.isPlaying = !self.isPlaying;
+    self.isPlaying = NO;
     
-    for (int i = 0; i < self.tracks.count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i inSection:0];
-        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn addTarget:self
-                          action:@selector(playPreview:)
-                forControlEvents:UIControlEventTouchUpInside];
-    }
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:sender.tag
+                                                inSection:0];
+    
+    [self restoreMedia:indexPath];
 }
 
 -(void)trackDidFinishPlaying:(NSNotification *) notification
 {
-    for (int i = 0; i < self.tracks.count; i++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:i
-                                                    inSection:0];
-        
-        Track_TVCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.mediaBtn setImage:[UIImage imageNamed:@"Play"]
-                       forState:UIControlStateNormal];
-        
-        [cell.mediaBtn removeTarget:nil
-                             action:NULL
-                   forControlEvents:UIControlEventTouchUpInside];
-        
-        [cell.mediaBtn addTarget:self
-                          action:@selector(playPreview:)
-                forControlEvents:UIControlEventTouchUpInside];
-    }
-    
+    [self.player pause];
+    self.player = nil;
     self.isPlaying = NO;
+    self.tagPlaying = -1;
+    
+    NSIndexPath *indexPath = (NSIndexPath *)[notification object];
+    [self restoreMedia:indexPath];
 }
 
-#pragma mark - Table view
+#pragma mark - UITableView
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -460,15 +467,12 @@ static NSString *CellIdentifier = @"trackCell";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
-{
-    return self.tracks.count;
-}
+ numberOfRowsInSection:(NSInteger)section { return self.tracks.count; }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    Track_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:@"trackCell"
+    Track_TVCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
                                                          forIndexPath:indexPath];
     
     [self configureCell:cell
@@ -491,24 +495,6 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath
     newTracksTVC.recommendationsParameters = [self.tracks objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:newTracksTVC
                                          animated:YES];
-}
-
-
-#pragma mark - UITabBar
-
-- (void)tabBarController:(UITabBarController *)tabBarController
- didSelectViewController:(UIViewController *)viewController
-{
-    NSLog(@"%lu", (unsigned long)tabBarController.selectedIndex);
-    if (tabBarController.selectedIndex == 0) {
-        NSLog(@"showTopSongs");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"showTopSongs" object:nil];
-    }
-    
-    if (tabBarController.selectedIndex == 2) {
-        NSLog(@"showNewReleases");
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"showNewReleases" object:nil];
-    }
 }
 
 @end

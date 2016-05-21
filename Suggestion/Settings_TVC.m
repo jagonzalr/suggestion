@@ -55,7 +55,7 @@ static NSString *CellIdentifier = @"settingCell";
     cell.textLabel.textColor = [JGStyles textColor];
     
     UIView *cellBackgroundView = [[UIView alloc] init];
-    cellBackgroundView.backgroundColor = [JGStyles greyDarkColor];
+    cellBackgroundView.backgroundColor = [JGStyles greyLightColor];
     cell.selectedBackgroundView = cellBackgroundView;
     cell.backgroundColor = [UIColor clearColor];
 }
@@ -74,7 +74,7 @@ static NSString *CellIdentifier = @"settingCell";
 - (void)customizeUI
 {
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorColor = [JGStyles greyLightColor];
+    self.tableView.separatorColor = [JGStyles greyDarkColor];
     self.tableView.estimatedRowHeight = 150.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.tableFooterView = [UIView new];

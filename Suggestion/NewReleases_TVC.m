@@ -61,6 +61,7 @@ static NSString *CellIdentifier = @"newReleaseCell";
     NSDictionary *album = self.albums[indexPath.row];
     
     cell.albumName.text = album[@"name"];
+    cell.albumName.text = [cell.albumName.text substringToIndex: MIN(35, [cell.albumName.text length])];
     cell.albumArtist.text = album[@"artists"][0][@"name"];
     cell.albumArtist.text = cell.albumArtist.text.uppercaseString;
     cell.albumName.textColor = [JGStyles textColor];
