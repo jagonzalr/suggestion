@@ -1,0 +1,5 @@
+
+clean true
+output_directory "./fastlane/build"
+output_name "Suggestion"
+scheme "Suggestion"

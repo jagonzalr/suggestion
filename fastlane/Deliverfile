@@ -1,10 +1,8 @@
-###################### More Options ######################
-# If you want to have even more control, check out the documentation
-# https://github.com/fastlane/fastlane/blob/master/deliver/Deliverfile.md
 
+app_identifier "com.jagonzalr.Suggestion"
+username "jagonzalr@gmail.com"
 
-###################### Automatically generated ######################
-# Feel free to remove the following line if you use fastlane (which you should)
-
-app_identifier "com.jagonzalr.Suggestion" # The bundle identifier of your app
-username "jagonzalr@gmail.com" # your Apple ID user
+copyright "#{Time.now.year} José Antonio González Rodríguez"
+app_icon './iTunesArtwork@2x.png'
+app_rating_config_path './fastlane/rating_config.json'
+price_tier 0

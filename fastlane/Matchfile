@@ -1,9 +1,5 @@
+
 git_url "https://github.com/jagonzalr/ios-certificates.git"
-
-type "development" # The default type, can be: appstore, adhoc or development
-
+type "development"
 app_identifier "com.jagonzalr.Suggestion"
-username "jagonzalr@gmail.com" # Your Apple Developer Portal username
-
-# For all available options run `match --help`
-# Remove the # in the beginning of the line to enable the other options
+username "jagonzalr@gmail.com"
